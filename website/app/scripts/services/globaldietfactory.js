@@ -17,5 +17,6 @@ angular.module('globalDietApp')
       });
       return items;
     }
+    
     return dataFactory;
   });
