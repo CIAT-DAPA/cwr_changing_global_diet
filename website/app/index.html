@@ -17,83 +17,83 @@
   <!-- endbuild -->
 </head>
 
-<body ng-app="globalDietApp">
-  <!--[if lte IE 8]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
-
-  <!-- Add your site or application content here -->
-  <div class="header">
-    <div class="navbar navbar-default" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-
-          <a class="navbar-brand" href="#/">globalDiet</a>
-        </div>
-
-        <div class="collapse navbar-collapse" id="js-navbar-collapse">
-
-          <ul class="nav navbar-nav">
-            <li><a href="#/">Home</a></li>
-            <li><a ng-href="#/about">About</a></li>
-            <li><a ng-href="#/flowingdata">Flowing Data</a></li>
-            <li><a ng-href="#/">Contact</a></li>
-          </ul>
-        </div>
-      </div>
+<body ng-app="globalDietApp" ng-controller="MainCtrl">
+  <div class="main" snapscroll enable-arrow-keys snap-index="snapIndex" before-snap="beforeSnap(snapIndex)" after-snap="afterSnap(snapIndex)"
+    snap-animation="snapAnimation" ng-swipe-up="swipeUp()" ng-swipe-down="swipeDown()">
+    <div>
+      <h1>Introduction</h1>
+      
+    </div>
+    <div ng-controller="FlowingdataCtrl">
+      <h1>Flowing Data</h1>
+      <div id="main-wrapper">
+	<div id="leftside">
+		<h1>Average Daily Consumption, Per Person</h1>
+		<div id="speedcontrol">
+			<div class="label">Speed</div>
+			<div class="button" data-speed="pause">Pause</div>
+			<div class="button" data-speed="3000">Slow</div>
+			<div class="button current" data-speed="750">Medium</div>
+			<div class="button" data-speed="300">Fast</div>
+		</div>
+		<div id="scalecontrol">
+			<div class="label" style="">Scale by</div>
+			<div class="button current" data-scale="group">Group</div>
+			<div class="button" data-scale="item">Item</div>
+		</div>
+	</div>
+	<div id="year">
+		<div class="sublabel">Year</div>
+		<div id="yearvalue" class="valuedesc">1970</div>
+	</div>
+	<div class="clr"></div>
+	<div id="header">
+		<div class="sec">
+			<h3>Meat</h3>Ounces</div>
+		<div class="sec">
+			<h3>Vegetables</h3>Cups</div>
+		<div class="sec">
+			<h3>Fruit</h3>Cups</div>
+		<div class="sec">
+			<h3>Grains</h3>Ounces</div>
+		<div class="sec">
+			<h3>Dairy</h3>Cups</div>
+		<div class="sec">
+			<h3>Fat</h3>Grams</div>
+	</div>
+	<div id="charts"></div>
+</div>
     </div>
   </div>
-
-  <div class="container">
-    <div ng-view=""></div>
-  </div>
-
-  <div class="footer">
-    <div class="container">
-      <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
-    </div>
-  </div>
-
-
-  <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-  <!-- <script>
-       !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
-       (A[l].q=A[l].q||[]).push(arguments)},A[l].l=+new Date,a=n.createElement(g),
-       r=n.getElementsByTagName(g)[0],a.src=u,r.parentNode.insertBefore(a,r)
-       }(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-       ga('create', 'UA-XXXXX-X');
-       ga('send', 'pageview');
-    </script>
-  -->
+  <ul class="indicators">
+    <li ng-repeat="n in [0,1]">
+      <a href="#{{n}}" ng-click="$parent.snapIndex=n"><span ng-class="{active: snapIndex == n}"></span></a>
+    </li>
+  </ul>
 
   <!-- build:js(.) scripts/vendor.js -->
   <!-- bower:js -->
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-  <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="bower_components/angular-scrollie/dist/angular-scrollie.js"></script>
+  <script src="bower_components/angular-snapscroll/dist/angular-snapscroll.js"></script>
+  <script src="bower_components/angular-wheelie/dist/angular-wheelie.js"></script>
+  <script src="bower_components/angular-swipe/dist/angular-swipe.js"></script>
   <script src="bower_components/d3/d3.js"></script>
   <script src="bower_components/d3.slider/d3.slider.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
 
   <!-- build:js({.tmp,app}) scripts/scripts.js -->
-  <script src="scripts/app.js"></script>
-  <script src="scripts/controllers/main.js"></script>
-  <script src="scripts/controllers/about.js"></script>
+  <script src="scripts/app.js"></script>  
   <script src="scripts/services/globaldietfactory.js"></script>
+  <script src="scripts/controllers/main.js"></script>
   <script src="scripts/controllers/flowingdata.js"></script>
   <script src="scripts/libs/d3.flowingdata.js"></script>
   <!-- endbuild -->
+
+
 </body>
 
 </html>
