@@ -8,10 +8,10 @@
  * Controller of the globalDietApp
  */
 angular.module('globalDietApp')
-  .controller('FlowingdataCtrl', function () {
-    var DATA_FILE_LOC = "data/global_diet_tsv.tsv";
-    var START_YEAR = 1970;
-    var CURR_YEAR = 1970;
+  .controller('FlowingdataCtrl', function (config) {
+    var DATA_FILE_LOC = config.calories_tsv;
+    var START_YEAR = 1961;
+    var CURR_YEAR = 1961;
     var PAUSED = false;
     var USER_SPEED = 750;
     var USER_SCALE = "group";
@@ -21,13 +21,14 @@ angular.module('globalDietApp')
 
 
     var food_groups = {
-      "meat": { "max": 3.75 },
-      "veg": { "max": 1 },
-      "fruit": { "max": .2 },
-      "grain": { "max": 7 },
-      "dairy": { "max": 1 },
-      // "sugar":    { "max": 25 },
-      "fat": { "max": 60 }
+      "alcoholic": { "max": 3.75 },
+      "cereals": { "max": 1 },
+      "fruits": { "max": .2 },
+      "meat": { "max": 7 },
+      "miscellaneous": { "max": 1 },
+      // "oilcrops":    { "max": 25 },
+      "pulses": { "max": 60 }
+
     };
 
 
@@ -127,7 +128,7 @@ angular.module('globalDietApp')
         .attr("height", height);
       svg.append("path")
         .attr("class", "area")
-        .attr("d", function (d) { y.domain([0, food_groups[d.food_group].max]); return area(d.values); });
+        .attr("d", function (d) { console.log(food_groups); y.domain([0, food_groups[d.food_group].max]); return area(d.values); });
       svg.append("path")
         .attr("class", "line")
         .attr("d", function (d) { y.domain([0, food_groups[d.food_group].max]); return line(d.values); });
@@ -233,8 +234,8 @@ angular.module('globalDietApp')
 
 
           // Go again.
-          if (CURR_YEAR == 2013) {
-            CURR_YEAR = 1969;
+          if (CURR_YEAR == 2009) {
+            CURR_YEAR = 1961;
             setTimeout(timer, USER_SPEED * 5);
           } else {
             setTimeout(timer, USER_SPEED);

@@ -22,47 +22,47 @@
     snap-animation="snapAnimation" ng-swipe-up="swipeUp()" ng-swipe-down="swipeDown()">
     <div>
       <h1>Introduction</h1>
-      
+
     </div>
     <div ng-controller="FlowingdataCtrl">
       <h1>Flowing Data</h1>
       <div id="main-wrapper">
-	<div id="leftside">
-		<h1>Average Daily Consumption, Per Person</h1>
-		<div id="speedcontrol">
-			<div class="label">Speed</div>
-			<div class="button" data-speed="pause">Pause</div>
-			<div class="button" data-speed="3000">Slow</div>
-			<div class="button current" data-speed="750">Medium</div>
-			<div class="button" data-speed="300">Fast</div>
-		</div>
-		<div id="scalecontrol">
-			<div class="label" style="">Scale by</div>
-			<div class="button current" data-scale="group">Group</div>
-			<div class="button" data-scale="item">Item</div>
-		</div>
-	</div>
-	<div id="year">
-		<div class="sublabel">Year</div>
-		<div id="yearvalue" class="valuedesc">1970</div>
-	</div>
-	<div class="clr"></div>
-	<div id="header">
-		<div class="sec">
-			<h3>Meat</h3>Ounces</div>
-		<div class="sec">
-			<h3>Vegetables</h3>Cups</div>
-		<div class="sec">
-			<h3>Fruit</h3>Cups</div>
-		<div class="sec">
-			<h3>Grains</h3>Ounces</div>
-		<div class="sec">
-			<h3>Dairy</h3>Cups</div>
-		<div class="sec">
-			<h3>Fat</h3>Grams</div>
-	</div>
-	<div id="charts"></div>
-</div>
+        <div id="leftside">
+          <h1>Average Daily Consumption, Per Person</h1>
+          <div id="speedcontrol">
+            <div class="label">Speed</div>
+            <div class="button" data-speed="pause">Pause</div>
+            <div class="button" data-speed="3000">Slow</div>
+            <div class="button current" data-speed="750">Medium</div>
+            <div class="button" data-speed="300">Fast</div>
+          </div>
+          <div id="scalecontrol">
+            <div class="label" style="">Scale by</div>
+            <div class="button current" data-scale="group">Group</div>
+            <div class="button" data-scale="item">Item</div>
+          </div>
+        </div>
+        <div id="year">
+          <div class="sublabel">Year</div>
+          <div id="yearvalue" class="valuedesc">1961</div>
+        </div>
+        <div class="clr"></div>
+        <div id="header">
+          <div class="sec">
+            <h3>Meat</h3>Ounces</div>
+          <div class="sec">
+            <h3>Vegetables</h3>Cups</div>
+          <div class="sec">
+            <h3>Fruit</h3>Cups</div>
+          <div class="sec">
+            <h3>Grains</h3>Ounces</div>
+          <div class="sec">
+            <h3>Dairy</h3>Cups</div>
+          <div class="sec">
+            <h3>Fat</h3>Grams</div>
+        </div>
+        <div id="charts"></div>
+      </div>
     </div>
   </div>
   <ul class="indicators">
@@ -86,7 +86,7 @@
   <!-- endbuild -->
 
   <!-- build:js({.tmp,app}) scripts/scripts.js -->
-  <script src="scripts/app.js"></script>  
+  <script src="scripts/app.js"></script>
   <script src="scripts/services/globaldietfactory.js"></script>
   <script src="scripts/controllers/main.js"></script>
   <script src="scripts/controllers/flowingdata.js"></script>
