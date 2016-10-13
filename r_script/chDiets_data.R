@@ -12,6 +12,9 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(caroline)
+library(purrr)
+library(broom)
+library(ggplot2)
 
 # load global diet data
 
@@ -20,13 +23,15 @@ all_data <- read.csv('all_1961_2009_final_analysis_data_completeready.csv')
 # load food groups
 
 gFood <- read.csv('FBS_commodities_foodgroups_regions_finaltest.csv')
-gFood <- gFood %>% select(1:2) %>% unique
+gFood <- gFood %>% dplyr::select(Item:food_group) %>% unique
 
-all_data2 <- left_join(all_data, gFood, by=c('Item'))
+all_data2 <- dplyr::left_join(all_data, gFood, by=c('Item'))
 rm(all_data, gFood)
 
 all_data2 <- all_data2 %>% tidyr::gather(Year, Value, Y1961:Y2009)
 all_data2$Year <- as.numeric(gsub(pattern='Y', replacement='', x=all_data2$Year))
+
+# -> functional programming
 
 all_world <- all_data2 %>% group_by(Item, Element, Unit, food_group, Year) %>% summarise(sum(Value, na.rm = TRUE))
 colnames(all_world)[ncol(all_world)] <- 'Value'
@@ -68,3 +73,66 @@ calories <- calories %>% spread(key = Columns, value = Value)
 colnames(calories)[1] <- 'year'
 
 write.delim(calories, 'calories.tsv')
+
+# functional programing <- 
+
+all_data2 <- all_data2 %>% mutate(year1960 = Year - 1960)
+all_data2 <- all_data2 %>%
+  filter(Item == "Animal Products (Total)")
+
+# nested data
+by_country <- all_data2 %>%
+  group_by(Element, Country) %>%
+  nest()
+
+# Fit models -----------------------------------------------------------------------------------
+
+# create a function to estimate a linear regression model using variables: lifeExp and year1950 from each data frame nested
+country_model <- function(df){
+  lm(Value ~ year1960, data=df)
+}
+
+# run the linear model to each data frame nested and saving continent, country and linear model
+models <- by_country %>%
+  mutate(
+    model = data %>% map(country_model)
+  )
+models
+
+# Broom ---------------------------------------------------------------------------------------
+
+models <- models %>%
+  mutate(
+    glance  = model %>% map(broom::glance),
+    rsq     = glance %>% map_dbl("r.squared"),
+    tidy    = model %>% map(broom::tidy),
+    augment = model %>% map(broom::augment)
+  )
+models
+
+models %>% arrange(desc(rsq))
+
+models %>%
+  ggplot(aes(rsq, reorder(Country, rsq))) +
+  geom_point(aes(colour = Element))
+
+# Unnest
+
+models %>%
+  unnest(tidy) %>%
+  dplyr::select(Element, Country, term, estimate, rsq) %>%
+  spread(term, estimate) %>%
+  ggplot(aes(`(Intercept)`, year1960)) +
+  geom_point(aes(colour = Element, size = rsq)) +
+  geom_smooth(se = FALSE) +
+  xlab("Animal products consumption") +
+  ylab("Yearly improvement") +
+  scale_size_area()
+
+models %>%
+  unnest(augment) %>%
+  ggplot(aes(year1960, .resid)) +
+  geom_line(aes(group = Country), alpha = 1/3) +
+  geom_smooth(se = FALSE) +
+  geom_hline(yintercept = 0, colour = "white") +
+  facet_wrap(~Element)

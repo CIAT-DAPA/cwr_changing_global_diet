@@ -1,0 +1,135 @@
+Item,food_group,Region,Notes
+Animal Products (Total),Animal products,DO NOT INCLUDE,Not possible to attribute animal products to animal species in majority of cases
+Apples,Fruits,Asia_Central,As per Palacios
+Apples,Fruits,Europe_Eastern_north,"As per Palacios, but refined by CK"
+Apples,Fruits,Europe_Eastern_south,"As per Palacios, but refined by CK"
+Apples,Fruits,Europe_Western_north,"As per Palacios, but refined by CK"
+Apples,Fruits,Europe_Western_south,"As per Palacios, but refined by CK"
+Bananas & plantains,Fruits,Asia_South,As per Palacios
+Bananas & plantains,Fruits,Asia_Southeast,As per Palacios
+Barley,Cereals,Asia_Central,As per Palacios
+Barley,Cereals,Asia_West,As per Palacios
+Barley,Cereals,Mediterranean_SouthandEast,As per Palacios
+Beans,Pulses,America_Central_and_Mexico,as determined from contributing species PNAS (Phaseolus)
+Beans,Pulses,America_South_andean,as determined from contributing species PNAS (Phaseolus)
+"Beverages, alcoholic",Alcoholic beverages,Not_Specified,
+"Beverages, fermented",Alcoholic beverages,Not_Specified,
+Cassava,Starchy roots,America_Central_and_Mexico,As per Palacios
+Cassava,Starchy roots,America_South_tropical,"As per Palacios, but refined by CK"
+"Cereals, other",Cereals,Not_Specified,
+"Citrus, other",Fruits,Not_Specified,
+Cloves,Spices,Asia_Southeast,"native to Indonesia. Major production in SE Asia, S Asia, S Africa, E Africa"
+Cocoa beans,Stimulants,America_Central_and_Mexico,CK added as native to Central America as well as tropical S America
+Cocoa beans,Stimulants,America_South_tropical,"As per Palacios, but refined by CK"
+Coconuts,Oilcrops,Asia_Southeast,As per Palacios
+Coconuts,Oilcrops,Pacific_Region_tropical,"As per Palacios, but refined by CK"
+Coffee,Stimulants,Africa_Central,"counting arabica and canephora. Native to E Africa (Arab, cane); C Af, W Af (cane)"
+Coffee,Stimulants,Africa_East,"counting arabica and canephora. Native to E Africa (Arab, cane); C Af, W Af (cane)"
+Coffee,Stimulants,Africa_West,"counting arabica and canephora. Native to E Africa (Arab, cane); C Af, W Af (cane)"
+Cottonseed oil,Oilcrops,Africa_East,As per Palacios
+Cottonseed oil,Oilcrops,Africa_Southern,As per Palacios
+Cottonseed oil,Oilcrops,America_Caribbean,CK- as per native areas G. hirstum
+Cottonseed oil,Oilcrops,America_Central_and_Mexico,As per Palacios
+Dates,Fruits,Asia_West,"CK added, corrected probable error in Palacios"
+Dates,Fruits,Mediterranean_SouthandEast,As per Palacios
+"Fruits, other",Fruits,Not_Specified,
+Grand Total,Grand Total,DO NOT INCLUDE,
+Grapefruit,Fruits,Asia_East,CK added as grapefruit is a relatively new hybrid from pomelo (SE Asia) and Orange (E Asia)
+Grapefruit,Fruits,Asia_Southeast,As per Palacios
+Grapes,Alcoholic beverages,Asia_Central,As per Palacios
+Grapes,Alcoholic beverages,Asia_West,As per Palacios
+Grapes,Alcoholic beverages,Mediterranean_SouthandEast,As per Palacios
+Groundnut,Oilcrops,America_South_tropical,"As per Palacios, but refined by CK"
+Lemons & limes,Fruits,Asia_East,from literature of origins of cultivation. Native areas not listed in GRIN taxonomy
+Lemons & limes,Fruits,Asia_South,from literature of origins of cultivation. Native areas not listed in GRIN taxonomy
+Lemons & limes,Fruits,Asia_West,from literature of origins of cultivation. Native areas not listed in GRIN taxonomy
+Maize,Cereals,America_Central_and_Mexico,As per Palacios
+Maize,Cereals,America_South_andean,added by CK due to domestication/origin in Andes
+Millets,Cereals,Africa_East,As per Palacios
+Millets,Cereals,Africa_Southern,As per Palacios
+Millets,Cereals,Africa_West,As per Palacios
+Millets,Cereals,Asia_East,As per Palacios
+Millets,Cereals,Asia_South,As per Palacios
+Millets,Cereals,Asia_Southeast,As per Palacios
+Miscellaneous,Miscellaneous,Not_Specified,As per Palacios
+Oats,Cereals,Europe_Eastern_south,"As per Palacios, but refined by CK"
+Oats,Cereals,Europe_Western_south,"As per Palacios, but refined by CK"
+Oats,Cereals,Mediterranean_SouthandEast,As per Palacios
+"Oilcrops, other",Oilcrops,Not_Specified,
+Olives,Oilcrops,Africa_East,"CK added due to literature, including GRIN taxonomy"
+Olives,Oilcrops,Asia_West,"CK added due to literature, including GRIN taxonomy"
+Olives,Oilcrops,Europe_Eastern_south,"CK added due to literature, including GRIN taxonomy"
+Olives,Oilcrops,Europe_Western_south,"CK added due to literature, including GRIN taxonomy"
+Olives,Oilcrops,Mediterranean_SouthandEast,As per Palacios
+Onions,Vegetables,Asia_Central,As per Palacios
+Oranges & mandarines,Fruits,Asia_East,As per Palacios
+Palm oil,Oilcrops,Africa_Central,CK added due to literature. Sp. Native down to Angola
+Palm oil,Oilcrops,Africa_West,As per Palacios
+Peas,Pulses,Africa_East,As per Palacios
+Peas,Pulses,Asia_West,As per Palacios
+Pepper,Spices,Asia_South,Piper nigrum. Native to S Asia (India)
+Pimento,Spices,America_Caribbean,as determined from contributing species PNAS. (Pimenta)
+Pimento,Spices,America_Central_and_Mexico,"as determined from contributing species PNAS (Capsicum, Pimenta)"
+Pimento,Spices,America_South_tropical,"as determined from contributing species PNAS (Capsicum, Pimenta)"
+Pineapples,Fruits,America_South_tropical,"As per Palacios, but refined by CK"
+Potatoes,Starchy roots,America_South_andean,"As per Palacios, but refined by CK"
+"Pulses, other",Pulses,Africa_Central,as determined from contributing species PNAS (Vigna)
+"Pulses, other",Pulses,Africa_East,as determined from contributing species PNAS (Vigna)
+"Pulses, other",Pulses,Africa_Southern,as determined from contributing species PNAS (Vigna)
+"Pulses, other",Pulses,Africa_West,as determined from contributing species PNAS (Vigna)
+"Pulses, other",Pulses,Asia_South,"as determined from contributing species PNAS (Cajanus, Lens, Cicer)"
+"Pulses, other",Pulses,Asia_West,"as determined from contributing species PNAS (Lens, Cicer, Vicia)"
+"Pulses, other",Pulses,Mediterranean_SouthandEast,"as determined from contributing species PNAS (Lens, Cicer, Vicia)"
+Rape & mustard,Oilcrops,Africa_East,As per Palacios
+Rape & mustard,Oilcrops,Europe_Eastern_south,"As per Palacios, but refined by CK"
+Rape & mustard,Oilcrops,Europe_Western_south,"As per Palacios, but refined by CK"
+Rape & mustard,Oilcrops,Mediterranean_SouthandEast,As per Palacios
+Rice,Cereals,Africa_West,As per Palacios
+Rice,Cereals,Asia_East,As per Palacios
+Rice,Cereals,Asia_South,As per Palacios
+Rice,Cereals,Asia_Southeast,As per Palacios
+"Roots, other",Starchy roots,America_Caribbean,as determined from contributing species PNAS (Xanthosoma)
+"Roots, other",Starchy roots,America_Central_and_Mexico,as determined from contributing species PNAS (Xanthosoma)
+"Roots, other",Starchy roots,America_South_tropical,as determined from contributing species PNAS (Xanthosoma)
+"Roots, other",Starchy roots,Asia_South,as determined from contributing species PNAS (Colocasia)
+"Roots, other",Starchy roots,Asia_Southeast,as determined from contributing species PNAS (Colocasia)
+Rye,Cereals,Asia_West,As per Palacios
+Sesame ,Oilcrops,Africa_East,As per Palacios
+Sesame ,Oilcrops,Asia_Central,As per Palacios
+Sesame ,Oilcrops,Asia_South,As per Palacios
+Sorghum,Cereals,Africa_Central,As per Palacios
+Sorghum,Cereals,Africa_East,As per Palacios
+Sorghum,Cereals,Africa_Southern,As per Palacios
+Sorghum,Cereals,Africa_West,As per Palacios
+Soybean,Oilcrops,Asia_East,As per Palacios
+"Spices, other",Spices,Not_Specified,
+Sugar,Sugarcrops,Asia_South,As per Palacios
+Sugar,Sugarcrops,Asia_Southeast,As per Palacios
+Sugar,Sugarcrops,Europe_Eastern_north,"As per Palacios, but refined by CK"
+Sugar,Sugarcrops,Europe_Eastern_south,"As per Palacios, but refined by CK"
+Sugar,Sugarcrops,Europe_Western_north,"As per Palacios, but refined by CK"
+Sugar,Sugarcrops,Europe_Western_south,"As per Palacios, but refined by CK"
+Sugar,Sugarcrops,Mediterranean_SouthandEast,As per Palacios
+Sunflower,Oilcrops,America_North,As per Palacios
+Sweet potatoes,Starchy roots,America_Central_and_Mexico,As per Palacios
+Sweet potatoes,Starchy roots,America_South_andean,"As per Palacios, but refined by CK"
+Sweet potatoes,Starchy roots,America_South_tropical,"As per Palacios, but refined by CK"
+"Sweeteners, other",Sugarcrops,Not_Specified,
+Tea,Stimulants,America_South_temperate,"as determined from contributing species PNAS. Mate native to Paraguay, Uruguay, Brazil, Argentina. Tea to S, E and SE Asia"
+Tea,Stimulants,America_South_tropical,"as determined from contributing species PNAS. Mate native to Paraguay, Uruguay, Brazil, Argentina. Tea to S, E and SE Asia"
+Tea,Stimulants,Asia_East,"as determined from contributing species PNAS. Mate native to Paraguay, Uruguay, Brazil, Argentina. Tea to S, E and SE Asia"
+Tea,Stimulants,Asia_South,"as determined from contributing species PNAS. Mate native to Paraguay, Uruguay, Brazil, Argentina. Tea to S, E and SE Asia"
+Tea,Stimulants,Asia_Southeast,"as determined from contributing species PNAS. Mate native to Paraguay, Uruguay, Brazil, Argentina. Tea to S, E and SE Asia"
+Tomatoes,Vegetables,America_South_andean,"As per Palacios, but refined by CK"
+Treenuts,Oilcrops,Not_Specified,
+"Vegetables, other",Vegetables,Not_Specified,
+Vegetal Products (Total),Vegetal Products (Total),DO NOT INCLUDE,As per Palacios
+Wheat,Cereals,Asia_Central,As per Palacios
+Wheat,Cereals,Asia_West,As per Palacios
+Wheat,Cereals,Mediterranean_SouthandEast,added by CK due to presence of early crop and wild relatives in region
+Yams,Starchy roots,Africa_Central,As per Palacios
+Yams,Starchy roots,Africa_East,As per Palacios
+Yams,Starchy roots,Africa_Southern,As per Palacios
+Yams,Starchy roots,Africa_West,As per Palacios
+Yams,Starchy roots,Asia_South,As per Palacios
+Yams,Starchy roots,Asia_Southeast,As per Palacios
