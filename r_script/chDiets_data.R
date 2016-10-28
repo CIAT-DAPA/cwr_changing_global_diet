@@ -2,34 +2,62 @@
 # H. Achicanoy
 # CIAT, 2016
 
-# change R options
-
-options(scipen = 999); options(warn = -1)
+# R options
+options(warn = -1)
+options(scipen = 999)
 
 # load packages
-
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-library(caroline)
-library(purrr)
-library(broom)
-library(ggplot2)
+suppressMessages(library(dplyr))
+suppressMessages(library(tidyr))
+suppressMessages(library(ggplot2))
+suppressMessages(library(caroline))
+suppressMessages(library(purrr))
+suppressMessages(library(broom))
+suppressMessages(library(ggplot2))
 
 # load global diet data
-
+# It's better to use Sara's data: CropData_longform.rpt (PENDING)
 all_data <- read.csv('all_1961_2009_final_analysis_data_completeready.csv')
 
 # load food groups
-
 gFood <- read.csv('FBS_commodities_foodgroups_regions_finaltest.csv')
 gFood <- gFood %>% dplyr::select(Item:food_group) %>% unique
 
+# merging global diet and food groups data
 all_data2 <- dplyr::left_join(all_data, gFood, by=c('Item'))
 rm(all_data, gFood)
 
+# reshape dataset
 all_data2 <- all_data2 %>% tidyr::gather(Year, Value, Y1961:Y2009)
 all_data2$Year <- as.numeric(gsub(pattern='Y', replacement='', x=all_data2$Year))
+
+# create data sources
+all_data3 <- all_data2 %>% group_by(Country, Element, Unit, food_group, Year) %>% summarise(sum(Value))
+names(all_data3)[ncol(all_data3)] <- 'Value'
+
+# create an abbreviation for food group
+all_data3$food_group <- tolower(abbreviate(all_data3$food_group))
+
+# select only 6 countries
+all_data3 <- all_data3 %>% filter(Country %in% c('Colombia', 'India', 'Germany', 'France', 'Argentina', 'Japan'))
+
+# create data sources for each metric
+measures <- all_data3$Element %>% unique %>% as.character
+nicerNms <- c('fat', 'calories', 'food_quantity', 'protein')
+lapply(1:length(measures), function(i){
+  
+  subData <- all_data3 %>% dplyr::filter(Element == measures[i])
+  subData$Value <- round(subData$Value, 1)
+  subData$Country <- tolower(subData$Country)
+  subData$combination <- paste(subData$Country, '_', subData$food_group, sep = '')
+  
+  subData <- subData[c('Year', 'Value', 'combination')]
+  subData <- subData %>% spread(key = combination, value = Value)
+  colnames(subData)[1] <- 'year'
+  
+  write.delim(subData, paste(nicerNms[i], '.tsv', sep = ''))
+  
+})
 
 # -> functional programming
 
@@ -114,7 +142,7 @@ models %>% arrange(desc(rsq))
 
 models %>%
   ggplot(aes(rsq, reorder(Country, rsq))) +
-  geom_point(aes(colour = Element))
+  geom_point(aes(colour = Element)) + theme_dark()
 
 # Unnest
 
