@@ -31,7 +31,7 @@ angular.module('globalDietApp')
 
     };
 
-
+/*
     // Dimensions of each multiple
     var margin = { top: 0, right: 20, bottom: 10, left: 15 },
       width = 180 - margin.left - margin.right,
@@ -56,7 +56,7 @@ angular.module('globalDietApp')
     var y = d3.scale.linear()
       .range([height, 0]);
     var scale_factor = 1.4;
-
+*/
     var xAxis = d3.svg.axis()
       .scale(x)
       .orient("bottom");
@@ -66,7 +66,7 @@ angular.module('globalDietApp')
       .orient("left")
       .ticks(6)
       .tickPadding(4);
-
+/*
     var area = d3.svg.area()
       .x(function (d) { return x(d.year); })
       .y0(height)
@@ -137,7 +137,7 @@ angular.module('globalDietApp')
         .attr("dy", "1.1em")
         .attr("dx", "0.4em")
         .text(function (d) { return d.field; });
-
+*/
 
       // Focusing on mouseovers
       var focus = svg.append("g")
@@ -251,47 +251,7 @@ angular.module('globalDietApp')
 
 
 
-      function resort() {
-
-        var year_index = CURR_YEAR - START_YEAR;
-
-        Object.keys(food_groups).forEach(function (grp, i) {
-
-          var partial_domain = foods.filter(function (d) {
-            return d.food_group == grp;
-          })
-            .sort(function (a, b) {
-              return d3.descending(a.values[year_index].value, b.values[year_index].value);
-            })
-            .map(function (d, i) { return d.field; });
-          var num_left = num_rows - partial_domain.length;
-
-          if (num_left > 0) {
-            var full_domain = partial_domain.concat(d3.range(num_left));
-          } else {
-            var full_domain = partial_domain;
-          }
-
-          var y1 = y0.domain(full_domain).copy();
-
-          d3.select("#charts").selectAll("svg." + grp)
-            .sort(function (a, b) { return y1(a.field) - y1(b.field); });
-
-          // if (PAUSED) {
-          // 	var move_duration = 750;
-          // } else {
-          // 	var move_duration = USER_SPEED;
-          // }
-
-          var transition = d3.select("#charts").transition().duration(USER_SPEED),
-            delay = function (d, i) { return i * 50; };
-
-          transition.selectAll("svg." + grp)
-            .delay(delay)
-            .style("top", function (d) { return y1(d.field) + "px"; });
-
-        });
-      }
+      
 
 
       function rescale() {
@@ -345,7 +305,7 @@ angular.module('globalDietApp')
             return y(d.values[index].value);
           });
       }
-
+/*
 
       function mouseover() {
         if (PAUSED) {
@@ -414,7 +374,7 @@ angular.module('globalDietApp')
         // focus.attr("transform", "translate(" + x(d.year) + "," + y(d[field]) + ")");
         // focus.select("text.value").text(d[field]);
       }
-
+*/
 
 
     }); // @end d3.tsv()

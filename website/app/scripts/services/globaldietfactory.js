@@ -11,8 +11,16 @@ angular.module('globalDietApp')
   .factory('GlobalDietFactory', function (config) {
     var dataFactory = {};
 
-    dataFactory.list = function () {
-      var items = $http.get(config.global_diet_tsv).success(function (data) {
+    
+    /** Get the url of the file that have all data information */
+    function getDataSource(source, measure){
+      var data_folder = 'data/';
+      return data_folder + source + '/' + measure + '.tsv';
+    }
+
+    /** Get data for the graphic flowing data */
+    dataFactory.list = function (source, measure) {
+      var items = $http.get().success(function (data) {
         return data;
       });
       return items;
