@@ -2,96 +2,82 @@
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <title>Changing Global Diet</title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-  <!-- build:css(.) styles/vendor.css -->
-  <!-- bower:css -->
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-  <!-- endbower -->
-  <!-- endbuild -->
-  <!-- build:css(.tmp) styles/main.css -->
-  <link rel="stylesheet" href="styles/main.css">
-  <!-- endbuild -->
+	<meta charset="utf-8">
+	<title>Changing Global Diet</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+	<!-- build:css(.) styles/vendor.css -->
+	<!-- bower:css -->
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+	<!-- endbower -->
+	<!-- endbuild -->
+	<!-- build:css(.tmp) styles/main.css -->
+	<link rel="stylesheet" href="styles/main.css">
+	<!-- endbuild -->
 </head>
 
 <body ng-app="globalDietApp" ng-controller="MainCtrl">
-  <div class="main" snapscroll enable-arrow-keys snap-index="snapIndex" before-snap="beforeSnap(snapIndex)" after-snap="afterSnap(snapIndex)"
-    snap-animation="snapAnimation" ng-swipe-up="swipeUp()" ng-swipe-down="swipeDown()">
-    <div>
-      <h1>Introduction</h1>
+	<div>
 
-    </div>
-    <div ng-controller="FlowingdataCtrl">
-      <h1>Flowing Data</h1>
-      <div id="main-wrapper">
-        <div id="leftside">
-          <h1>Average Daily Consumption, Per Person</h1>
-          <div id="speedcontrol">
-            <div class="label">Speed</div>
-            <div class="button" data-speed="pause">Pause</div>
-            <div class="button" data-speed="3000">Slow</div>
-            <div class="button current" data-speed="750">Medium</div>
-            <div class="button" data-speed="300">Fast</div>
-          </div>
-          <div id="scalecontrol">
-            <div class="label" style="">Scale by</div>
-            <div class="button current" data-scale="group">Group</div>
-            <div class="button" data-scale="item">Item</div>
-          </div>
-        </div>
-        <div id="year">
-          <div class="sublabel">Year</div>
-          <div id="yearvalue" class="valuedesc">1961</div>
-        </div>
-        <div class="clr"></div>
-        <div id="header">
-          <div class="sec">
-            <h3>Meat</h3>Ounces</div>
-          <div class="sec">
-            <h3>Vegetables</h3>Cups</div>
-          <div class="sec">
-            <h3>Fruit</h3>Cups</div>
-          <div class="sec">
-            <h3>Grains</h3>Ounces</div>
-          <div class="sec">
-            <h3>Dairy</h3>Cups</div>
-          <div class="sec">
-            <h3>Fat</h3>Grams</div>
-        </div>
-        <div id="charts"></div>
-      </div>
-    </div>
-  </div>
-  <ul class="indicators">
-    <li ng-repeat="n in [0,1]">
-      <a href="#{{n}}" ng-click="$parent.snapIndex=n"><span ng-class="{active: snapIndex == n}"></span></a>
-    </li>
-  </ul>
+		<div ng-controller="FlowingdataCtrl">
+			<h1>Flowing Data</h1>
+			<div id="main-wrapper">
+				<div id="leftside">
+					<h1>Average Daily Consumption, Per Person</h1>
+					<div id="speedcontrol">
+						<div class="label">Speed</div>
+						<div class="button" data-speed="pause">Pause</div>
+						<div class="button" data-speed="3000">Slow</div>
+						<div class="button current" data-speed="750">Medium</div>
+						<div class="button" data-speed="300">Fast</div>
+					</div>
+					<div id="scalecontrol">
+						<div class="label" style="">Scale by</div>
+						<div class="button current" data-scale="group">Group</div>
+						<div class="button" data-scale="item">Item</div>
+					</div>
+				</div>
+				<div id="year">
+					<div class="sublabel">Year</div>
+					<div id="yearvalue" class="valuedesc">1961</div>
+				</div>
+				<div class="clr"></div>
+				<div id="header">
+					<div class="sec">
+						<h3>Meat</h3>Ounces</div>
+					<div class="sec">
+						<h3>Vegetables</h3>Cups</div>
+					<div class="sec">
+						<h3>Fruit</h3>Cups</div>
+					<div class="sec">
+						<h3>Grains</h3>Ounces</div>
+					<div class="sec">
+						<h3>Dairy</h3>Cups</div>
+					<div class="sec">
+						<h3>Fat</h3>Grams</div>
+				</div>
+				<div id="charts"></div>
+			</div>
+		</div>
+	</div>
 
-  <!-- build:js(.) scripts/vendor.js -->
-  <!-- bower:js -->
-  <script src="bower_components/jquery/dist/jquery.js"></script>
-  <script src="bower_components/angular/angular.js"></script>
-  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-  <script src="bower_components/d3/d3.js"></script>
-  <script src="bower_components/d3.slider/d3.slider.js"></script>
-  <script src="bower_components/angular-scrollie/dist/angular-scrollie.js"></script>
-  <script src="bower_components/angular-snapscroll/dist/angular-snapscroll.js"></script>
-  <script src="bower_components/angular-wheelie/dist/angular-wheelie.js"></script>
-  <script src="bower_components/angular-swipe/dist/angular-swipe.js"></script>
-  <!-- endbower -->
-  <!-- endbuild -->
+	<!-- build:js(.) scripts/vendor.js -->
+	<!-- bower:js -->
+	<script src="bower_components/jquery/dist/jquery.js"></script>
+	<script src="bower_components/angular/angular.js"></script>
+	<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+	<script src="bower_components/d3/d3.js"></script>
+	<!-- endbower -->
+	<!-- endbuild -->
 
-  <!-- build:js({.tmp,app}) scripts/scripts.js -->
-  <script src="scripts/app.js"></script>
-  <script src="scripts/services/globaldietfactory.js"></script>
-  <script src="scripts/controllers/main.js"></script>
-  <script src="scripts/controllers/flowingdata.js"></script>
-  <script src="scripts/libs/d3.flowingdata.js"></script>
-  <!-- endbuild -->
+	<!-- build:js({.tmp,app}) scripts/scripts.js -->
+	<script src="scripts/app.js"></script>
+	<script src="scripts/services/globaldietfactory.js"></script>
+	<script src="scripts/controllers/flowingdata.js"></script>
+  	<script src="scripts/libs/d3.flowingdata.controls.js"></script>
+	<script src="scripts/libs/d3.flowingdata.js"></script>
+	<!-- endbuild -->
 
 
 </body>

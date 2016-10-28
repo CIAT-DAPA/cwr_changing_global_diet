@@ -8,7 +8,4 @@
  *
  * Main module of the application.
  */
-angular.module('globalDietApp', ['swipe','snapscroll'])
-  .value('config', {
-    calories_tsv: 'data/calories.tsv'
-  });
+angular.module('globalDietApp', []);

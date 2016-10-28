@@ -170,8 +170,8 @@ body {
 }
 
 #main-wrapper {
-  width: 1063px;
-  margin: 10px auto;
+  width: 100%;
+  padding: 50px;
 }
 
 #leftside {
