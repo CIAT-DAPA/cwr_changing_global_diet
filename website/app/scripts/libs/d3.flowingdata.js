@@ -10,7 +10,9 @@ D3Graphics.Flowing.configuration = {
     max_columns: 6,
     canvas: { width: 0, height: 0, margin: { top: 10, right: 10, bottom: 10, left: 10 } },
     items: { width: 180, height: 90, margin: { top: 10, right: 10, bottom: 10, left: 10 } },
-    scale_factor = 1.4
+    scale_factor = 1.4,
+    rows: 7,
+    columns: 5
 }
 
 /** Data vars */
@@ -99,7 +101,39 @@ D3Graphics.Flowing.tools = {
     numberFormat: null,
     area: null,
     line: null,
-    resort: null
+    resort: null,
+    timer: null,
+    rescale: null,
+    wrap: function (text, width) {
+        text.each(function () {
+            var text = d3.select(this),
+                words = text.text().split(/\s+/).reverse(),
+                word,
+                line = [],
+                lineNumber = 0,
+                lineHeight = 1.2, // ems
+                y = text.attr("y"),
+                dy = parseFloat(text.attr("dy")),
+                tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+            while (word = words.pop()) {
+                line.push(word);
+                tspan.text(line.join(" "));
+                if (tspan.node().getComputedTextLength() > width) {
+                    line.pop();
+                    tspan.text(line.join(" "));
+                    line = [word];
+                    tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", lineHeight + dy + "em").text(word);
+                }
+            }
+        });
+    },
+    type: function (d, i) {
+        d3.keys(d).map(function (key) {
+            d[key] = +d[key];
+        });
+        return d;
+    }
+
 }
 
 /** Built all data structure require by graphic from data */
@@ -126,7 +160,7 @@ D3Graphics.Flowing.compile = function () {
     });
 
     // Select start year
-    D3Graphics.Flowing.data.start_year = d3.min(data,function(d){ return d[year];})
+    D3Graphics.Flowing.data.start_year = d3.min(data, function (d) { return d['year']; })
 
     // Max for each item
     D3Graphics.Flowing.data.items.forEach(function (f) {
@@ -170,49 +204,6 @@ D3Graphics.Flowing.init = function () {
     D3Graphics.Flowing.tools.line = d3.svg.line()
         .x(function (d) { return x(d.year); })
         .y(function (d) { return y(d.value); });
-
-    D3Graphics.Flowing.tools.resort = function () {
-
-        var year_index = D3Graphics.Flowing.controls.current_year - D3Graphics.Flowing.start_year START_YEAR;
-
-        Object.keys(food_groups).forEach(function (grp, i) {
-
-            var partial_domain = foods.filter(function (d) {
-                return d.food_group == grp;
-            })
-                .sort(function (a, b) {
-                    return d3.descending(a.values[year_index].value, b.values[year_index].value);
-                })
-                .map(function (d, i) { return d.field; });
-            var num_left = num_rows - partial_domain.length;
-
-            if (num_left > 0) {
-                var full_domain = partial_domain.concat(d3.range(num_left));
-            } else {
-                var full_domain = partial_domain;
-            }
-
-            var y1 = y0.domain(full_domain).copy();
-
-            d3.select("#charts").selectAll("svg." + grp)
-                .sort(function (a, b) { return y1(a.field) - y1(b.field); });
-
-            // if (PAUSED) {
-            // 	var move_duration = 750;
-            // } else {
-            // 	var move_duration = USER_SPEED;
-            // }
-
-            var transition = d3.select("#charts").transition().duration(USER_SPEED),
-                delay = function (d, i) { return i * 50; };
-
-            transition.selectAll("svg." + grp)
-                .delay(delay)
-                .style("top", function (d) { return y1(d.field) + "px"; });
-
-        });
-    }
-
 }
 
 /** Render */
@@ -285,22 +276,160 @@ D3Graphics.Flowing.render = function () {
         .on("mousemove", D3Graphics.Flowing.events.mousemove)
         .on("click", D3Graphics.Flowing.events.mouseclick);
 
+    // Creating function 
+
+    // Reording 
+    D3Graphics.Flowing.tools.resort = function () {
+
+        var year_index = D3Graphics.Flowing.controls.current_year - D3Graphics.Flowing.data.start_year;
+
+        Object.keys(D3Graphics.Flowing.data.groups).forEach(function (grp, i) {
+
+            var partial_domain = D3Graphics.Flowing.data.items.filter(function (d) { return d.group == grp; })
+                .sort(function (a, b) { return d3.descending(a.values[year_index].value, b.values[year_index].value); })
+                .map(function (d, i) { return d.field; });
+
+            var num_left = D3Graphics.Flowing.configuration.rows - partial_domain.length;
+
+            var full_domain = num_left > 0 ? partial_domain.concat(d3.range(num_left)) : partial_domain;
+
+            var y1 = y0.domain(full_domain).copy();
+
+            d3.select(D3Graphics.Flowing.configuration.container).selectAll("svg." + grp)
+                .sort(function (a, b) { return y1(a.field) - y1(b.field); });
+
+            var transition = d3.select(D3Graphics.Flowing.configuration.container).transition().duration(D3Graphics.Flowing.controls.speed),
+                delay = function (d, i) { return i * 50; };
+
+            transition.selectAll("svg." + grp)
+                .delay(delay)
+                .style("top", function (d) { return y1(d.field) + "px"; });
+
+        });
+    }
+
+    D3Graphics.Flowing.tools.timer = function () {
+        if (!D3Graphics.Flowing.controls.paused) {
+            D3Graphics.Flowing.controls.current_year += 1;
+            d3.select(D3Graphics.Flowing.configuration.container_year).text(D3Graphics.Flowing.controls.current_year);
+
+            // Resort accordingly
+            D3Graphics.Flowing.tools.resort();
+
+            // Tick focus markers
+            D3Graphics.Flowing.controls.focus.style("display", null);
+            var index = 0;
+
+            D3Graphics.Flowing.controls.focus.select("circle")
+                .attr("cx", x(D3Graphics.Flowing.controls.current_year))
+                .attr("cy", function (d) {
+                    index = D3Graphics.Flowing.tools.bisectYear(d.values, D3Graphics.Flowing.controls.current_year, 1);
+
+                    if (D3Graphics.Flowing.controls.scale == "item") {
+                        D3Graphics.Flowing.interpolation.y.domain([0, d.max * D3Graphics.Flowing.configuration.scale_factor]);
+                    } else {
+                        D3Graphics.Flowing.interpolation.y.domain([0, D3Graphics.Flowing.data.groups[d.group].max]);
+                    }
+                    return D3Graphics.Flowing.interpolation.y(d.values[index].value);
+                });
+            D3Graphics.Flowing.controls.focus.select("text")
+                .attr("x", D3Graphics.Flowing.interpolation.x(D3Graphics.Flowing.controls.current_year))
+                .attr("y", function (d) {
+                    if (D3Graphics.Flowing.controls.scale == "item") {
+                        D3Graphics.Flowing.interpolation.y.domain([0, d.max * D3Graphics.Flowing.configuration.scale_factor]);
+                    } else {
+                        D3Graphics.Flowing.interpolation.y.domain([0, D3Graphics.Flowing.data.groups[d.group].max]);
+                    }
+                    return D3Graphics.Flowing.interpolation.y(d.values[index].value);
+                })
+                .text(function (d) { return D3Graphics.Flowing.tools.numberFormat(d.values[index].value); });
+
+
+            // Go again.
+            if (D3Graphics.Flowing.controls.current_year == 2009) {
+                D3Graphics.Flowing.controls.current_year = D3Graphics.Flowing.data.start_year;
+                setTimeout(D3Graphics.Flowing.tools.timer, D3Graphics.Flowing.controls.speed * 5);
+            }
+            else {
+                setTimeout(D3Graphics.Flowing.tools.timer, D3Graphics.Flowing.controls.speed);
+            }
+        }
+    }
+
+    D3Graphics.Flowing.tools.rescale = function () {
+        svg.select("path.area")
+            .transition()
+            .duration(600)
+            .attr("d", function (d) {
+                if (USER_SCALE == "item") {
+                    D3Graphics.Flowing.interpolation.y.domain([0, d.max * D3Graphics.Flowing.configuration.scale_factor]);
+                } else {
+                    D3Graphics.Flowing.interpolation.y.domain([0, D3Graphics.Flowing.data.groups[d.group].max]);
+                }
+                return D3Graphics.Flowing.tools.area(d.values);
+            });
+        svg.select("path.line")
+            .transition()
+            .duration(600)
+            .attr("d", function (d) {
+                if (D3Graphics.Flowing.controls.scale == "item") {
+                    D3Graphics.Flowing.interpolation.y.domain([0, d.max * D3Graphics.Flowing.configuration.scale_factor]);
+                } else {
+                    D3Graphics.Flowing.interpolation.y.domain([0, D3Graphics.Flowing.data.groups[d.group].max]);
+                }
+                return D3Graphics.Flowing.tools.line(d.values);
+            });
+
+        D3Graphics.Flowing.controls.focus.select("circle")
+            .transition()
+            .duration(600)
+            .attr("cy", function (d) {
+                var index = CURR_YEAR - START_YEAR;
+                if (D3Graphics.Flowing.controls.scale == "item") {
+                    D3Graphics.Flowing.interpolation.y.domain([0, d.max * D3Graphics.Flowing.configuration.scale_factor]);
+                } else {
+                    D3Graphics.Flowing.interpolation.y.domain([0, D3Graphics.Flowing.data.groups[d.group].max]);
+                }
+                return D3Graphics.Flowing.interpolation.y(d.values[index].value);
+            });
+        D3Graphics.Flowing.controls.focus.select("text")
+            .transition()
+            .duration(600)
+            .attr("y", function (d) {
+                var index = CURR_YEAR - START_YEAR;
+                if (D3Graphics.Flowing.controls.scale == "item") {
+                    D3Graphics.Flowing.interpolation.y.domain([0, d.max * D3Graphics.Flowing.configuration.scale_factor]);
+                } else {
+                    D3Graphics.Flowing.interpolation.y.domain([0, D3Graphics.Flowing.data.groups[d.group].max]);
+                }
+                return D3Graphics.Flowing.interpolation.y(d.values[index].value);
+            });
+    }
+
+    // Speed control buttons
+    d3.selectAll("#scalecontrol .button").on("click", function () {
+        D3Graphics.Flowing.controls.scale = d3.select(this).attr("data-scale");
+        d3.select("#scalecontrol .current").classed("current", false);
+        d3.select(this).classed("current", true);
+        D3Graphics.Flowing.tools.rescale.rescale();
+    });
+    
+    d3.selectAll("#speedcontrol .button").on("click", function () {
+        var speed = d3.select(this).attr("data-speed");
+        d3.select("#speedcontrol .current").classed("current", false);
+        d3.select(this).classed("current", true);
+
+        if (speed == "pause") {
+            D3Graphics.Flowing.controls.paused = true;
+        } else {
+            D3Graphics.Flowing.controls.speed = +speed;
+            if (D3Graphics.Flowing.controls.paused) {
+                D3Graphics.Flowing.controls.paused = false;
+                D3Graphics.Flowing.tools.timer();
+            }
+        }
+    });
+
+    D3Graphics.Flowing.tools.resort();
+    D3Graphics.Flowing.tools.timer();
 }
-
-/** Start Controls **/
-D3Graphics.Flowing.Control = D3Graphics.Flowing.Control || {};
-
-
-/** End Controls **/
-
-/** Start Groups **/
-D3Graphics.Flowing.Groups = D3Graphics.Flowing.Groups || {};
-
-
-/** End Groups **/
-
-/** Start Measure **/
-D3Graphics.Flowing.Measure = D3Graphics.Flowing.Measure || {};
-
-
-/** End Measure **/
