@@ -141,7 +141,8 @@ D3Graphics.Flowing.init = function () {
     D3Graphics.Flowing.configuration.rows = keys.length;
     var max = D3Graphics.Flowing.configuration.canvas.width - D3Graphics.Flowing.configuration.items.width_full - items_margin_right - items_margin_left;
     D3Graphics.Flowing.interpolation.x0 = d3.scale.ordinal().rangeRoundPoints([0, max]).domain(keys);
-    D3Graphics.Flowing.interpolation.y0 = d3.scale.ordinal().domain(d3.range(10)).rangeRoundPoints([0, 2000]);
+    var height_max = (D3Graphics.Flowing.configuration.items.height_full * keys.length) * 1.8;
+    D3Graphics.Flowing.interpolation.y0 = d3.scale.ordinal().domain(d3.range(keys.length)).rangeRoundPoints([0, height_max]);
     D3Graphics.Flowing.interpolation.x = d3.scale.linear().range([0, D3Graphics.Flowing.configuration.items.width]);
     D3Graphics.Flowing.interpolation.y = d3.scale.linear().range([D3Graphics.Flowing.configuration.items.height, 0]);
     // Min and Max year for the x domain
@@ -178,7 +179,7 @@ D3Graphics.Flowing.init = function () {
     D3Graphics.Flowing.events.mouseclick = function () {
         if (D3Graphics.Flowing.controls.paused) {
             var xmove = D3Graphics.Flowing.interpolation.x.invert(d3.mouse(this)[0]);
-            var index = D3Graphics.Flowing.tools.bisectYear(focus.datum().values, xmove, 1);
+            var index = D3Graphics.Flowing.tools.bisectYear(D3Graphics.Flowing.controls.focus.datum().values, xmove, 1);
             CURR_YEAR = D3Graphics.Flowing.controls.start_year + index;
             D3Graphics.Flowing.tools.resort();
         }
