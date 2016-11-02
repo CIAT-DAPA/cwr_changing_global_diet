@@ -6,6 +6,7 @@ D3Graphics.Flowing = D3Graphics.Flowing || {};
 /** Configuration vars */
 D3Graphics.Flowing.configuration = {
     container: '',
+    container_header: '',
     container_year: '#yearvalue',
     max_columns: 6,
     canvas: { width: 1000, height: 0, margin: { top: 10, right: 10, bottom: 10, left: 10 } },
@@ -220,6 +221,18 @@ D3Graphics.Flowing.render = function () {
     D3Graphics.Flowing.init();
 
     // Start chart for each item
+    var svg_header = d3.select(D3Graphics.Flowing.configuration.container_header).selectAll("svg")
+        .data(Object.keys(D3Graphics.Flowing.data.groups))
+        .enter().append("svg")
+        .attr("width", D3Graphics.Flowing.configuration.items.width_full)
+        .attr("height", 30)
+        .style("left", function (d, i) { return D3Graphics.Flowing.interpolation.x0(d) + "px"; })
+        .append("text")
+        .attr("dy", "1.1em")
+        .attr("dx", "0.4em")
+        .text(function (d) { return d; })
+        .attr("transform", "translate(" + D3Graphics.Flowing.configuration.items.margin.left + "," + D3Graphics.Flowing.configuration.items.margin.top + ")");
+
     var svg = d3.select(D3Graphics.Flowing.configuration.container).selectAll("svg")
         .data(D3Graphics.Flowing.data.items)
         .enter().append("svg")

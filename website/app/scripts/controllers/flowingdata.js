@@ -8,14 +8,22 @@
  * Controller of the globalDietApp
  */
 angular.module('globalDietApp')
-  .controller('FlowingdataCtrl', function (GlobalDietFactory,CSV2Json) {
+  .controller('FlowingdataCtrl', function ($scope, GlobalDietFactory) {
     var source = 'food_group';
     var measure = 'calories';
-    GlobalDietFactory.list(source,measure).then(function(data){
+
+    $scope.countries = [];
+
+    GlobalDietFactory.list(source, measure).then(function (data) {
+
+      $scope.countries = GlobalDietFactory.getCountries(data);
+
       var graphic = D3Graphics.Flowing;
       graphic.configuration.container = '#charts';
-      graphic.data.source = CSV2Json.parse(data.data);
+      graphic.configuration.container_header = '#charts_header';
+      graphic.data.source = data;
       graphic.render();
     });
-    
+
+
   });
