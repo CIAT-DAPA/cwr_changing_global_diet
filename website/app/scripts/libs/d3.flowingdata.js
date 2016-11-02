@@ -10,7 +10,7 @@ D3Graphics.Flowing.configuration = {
     container_year: '#yearvalue',
     max_columns: 6,
     canvas: { width: 1000, height: 0, margin: { top: 10, right: 10, bottom: 10, left: 10 } },
-    items: { width: 180, height: 90, margin: { top: 5, right: 5, bottom: 5, left: 5 }, width_full : 180,  height_full : 100 },
+    items: { width: 180, height: 90, margin: { top: 5, right: 5, bottom: 5, left: 5 }, width_full: 180, height_full: 100 },
     scale_factor: 1,
     rows: 6,
     columns: 6
@@ -31,6 +31,7 @@ D3Graphics.Flowing.interpolation = {
     y0: null,
     x: null,
     y: null,
+    color: null
 }
 
 D3Graphics.Flowing.controls = {
@@ -130,7 +131,7 @@ D3Graphics.Flowing.compile = function () {
 D3Graphics.Flowing.init = function () {
     // Init the container
     var div = document.getElementById(D3Graphics.Flowing.configuration.container.replace('#', ''));
-    D3Graphics.Flowing.configuration.canvas.width = div.clientWidth*.99;
+    D3Graphics.Flowing.configuration.canvas.width = div.clientWidth * .99;
     // Set the items size
     D3Graphics.Flowing.configuration.items.width_full = D3Graphics.Flowing.configuration.canvas.width / D3Graphics.Flowing.configuration.max_columns;
     var items_margin_right = D3Graphics.Flowing.configuration.items.margin.right;
@@ -151,6 +152,12 @@ D3Graphics.Flowing.init = function () {
         d3.min(D3Graphics.Flowing.data.items, function (s) { return s.values[0].year; }),
         d3.max(D3Graphics.Flowing.data.items, function (s) { return s.values[s.values.length - 1].year; })
     ]);
+    D3Graphics.Flowing.interpolation.color = function () {
+        d3.scale.ordinal().rangeRoundPoints([0, max]);
+        return d3.scale.quantize()
+            .domain(keys)
+            .range(["#ec3a64", "#8DC63F", "#ff0f9d", "#F68D3D", "#009EFF", "#FFCD31"]);
+    }
 
     // Init the tools 
     D3Graphics.Flowing.tools.bisectYear = d3.bisector(function (d) { return d.year; }).left;
@@ -194,7 +201,7 @@ D3Graphics.Flowing.init = function () {
                 .attr("cx", D3Graphics.Flowing.interpolation.x(xmove))
                 .attr("cy", function (d) {
                     index = D3Graphics.Flowing.tools.bisectYear(d.values, xmove, 1);
-                    d3.select("#yearvalue").text(D3Graphics.Flowing.data.start_year + index);
+                    d3.select(D3Graphics.Flowing.configuration.container_year).text(D3Graphics.Flowing.data.start_year + index);
                     //D3Graphics.Flowing.interpolation.y.domain([0, d.max * D3Graphics.Flowing.configuration.scale_factor]);
                     D3Graphics.Flowing.interpolation.y.domain([0, D3Graphics.Flowing.data.groups[d.group].max * D3Graphics.Flowing.configuration.scale_factor]);
                     return D3Graphics.Flowing.interpolation.y(d.values[index].value);
@@ -202,7 +209,7 @@ D3Graphics.Flowing.init = function () {
             D3Graphics.Flowing.controls.focus.select("text")
                 .attr("x", D3Graphics.Flowing.interpolation.x(xmove))
                 .attr("y", function (d) {
-                    D3Graphics.Flowing.interpolation.y.domain([0, D3Graphics.Flowing.data.groups[d.group].max * D3Graphics.Flowing.configuration.scale_factor]);                    
+                    D3Graphics.Flowing.interpolation.y.domain([0, D3Graphics.Flowing.data.groups[d.group].max * D3Graphics.Flowing.configuration.scale_factor]);
                     return D3Graphics.Flowing.interpolation.y(d.values[index].value);
                 })
                 .text(function (d) {
@@ -230,7 +237,7 @@ D3Graphics.Flowing.render = function () {
         .append("text")
         .attr("dy", "1.1em")
         .attr("dx", "0.4em")
-        .text(function (d) { return d; })
+        .text(function (d) { return d.charAt(0).toUpperCase() + d.slice(1); })
         .attr("transform", "translate(" + D3Graphics.Flowing.configuration.items.margin.left + "," + D3Graphics.Flowing.configuration.items.margin.top + ")");
 
     var svg = d3.select(D3Graphics.Flowing.configuration.container).selectAll("svg")
@@ -254,7 +261,8 @@ D3Graphics.Flowing.render = function () {
         .attr("d", function (d) {
             D3Graphics.Flowing.interpolation.y.domain([0, D3Graphics.Flowing.data.groups[d.group].max]);
             return D3Graphics.Flowing.tools.area(d.values);
-        });
+        })
+        .style("fill", function(d){ return D3Graphics.Flowing.interpolation.color(d);});
 
     svg.append("path")
         .attr("class", "line")
@@ -344,13 +352,13 @@ D3Graphics.Flowing.render = function () {
                 });
             D3Graphics.Flowing.controls.focus.select("text")
                 .attr("x", D3Graphics.Flowing.interpolation.x(D3Graphics.Flowing.controls.current_year))
-                .attr("y", function (d) {   
+                .attr("y", function (d) {
                     //D3Graphics.Flowing.interpolation.y.domain([0, d.max * D3Graphics.Flowing.configuration.scale_factor]);
                     D3Graphics.Flowing.interpolation.y.domain([0, D3Graphics.Flowing.data.groups[d.group].max * D3Graphics.Flowing.configuration.scale_factor]);
                     return D3Graphics.Flowing.interpolation.y(d.values[index].value);
                 })
                 .text(function (d) { return D3Graphics.Flowing.tools.numberFormat(d.values[index].value); });
-                
+
             // Go again.
             if (D3Graphics.Flowing.controls.current_year == D3Graphics.Flowing.data.end_year) {
                 D3Graphics.Flowing.controls.current_year = D3Graphics.Flowing.data.start_year;

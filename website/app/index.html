@@ -17,33 +17,51 @@
 	<!-- endbuild -->
 </head>
 
-<body ng-app="globalDietApp">
-	<div>
+<body ng-app="globalDietApp" ng-controller="FlowingdataCtrl">
 
-		<div ng-controller="FlowingdataCtrl">
-			<h1>Flowing Data</h1>
-			<div id="controls">
-				<div id="leftside">
-					<div id="speedcontrol">
-						<div class="label">Speed</div>
-						<div class="button" data-speed="pause">Pause</div>
-						<div class="button" data-speed="3000">Slow</div>
-						<div class="button current" data-speed="750">Medium</div>
-						<div class="button" data-speed="300">Fast</div>
-					</div>
-					
-				</div>
-				<div id="year">
-					<div class="sublabel">Year</div>
-					<div id="yearvalue" class="valuedesc">1961</div>
-				</div>
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">Flowing data</a>
 			</div>
-			<div class="clear"></div>
-			<div id="charts_header"></div>
-			<div class="clear"></div>
-			<div id="charts"></div>
-
+			<div id="navbar">				
+				<ul class="nav navbar-nav">
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Countries<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="#">Action</a></li>
+							<li><a href="#">Another action</a></li>
+							<li><a href="#">Something else here</a></li>
+							<li role="separator" class="divider"></li>
+							<li class="dropdown-header">Nav header</li>
+							<li><a href="#">Separated link</a></li>
+							<li><a href="#">One more separated link</a></li>
+						</ul>
+					</li>
+				</ul>				
+				<ul class="nav navbar-nav navbar-right">
+					<li><a>Year:</a></li>
+					<li><a id="yearvalue">1961</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Speed<span class="caret"></span></a>
+						<ul class="dropdown-menu" id="speedcontrol">
+							<li><a class="button" data-speed="pause">Pause</a></li>
+							<li><a class="button" data-speed="3000">Slow</a></li>
+							<li><a class="button current" data-speed="750">Medium</a></li>
+							<li><a class="button" data-speed="300">Fast</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
 		</div>
+	</nav>
+	<div>
+		<div class="clear"></div>
+		<div id="charts_header"></div>
+		<div class="clear"></div>
+		<div id="charts"></div>
 	</div>
 
 	<!-- build:js(.) scripts/vendor.js -->

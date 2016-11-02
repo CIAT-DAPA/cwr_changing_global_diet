@@ -6,23 +6,13 @@ html, body
   font-size: 100%;
   font: inherit;
   vertical-align: baseline;
-  font-family: 'Inconsolata', Monaco, "Lucida Console", Consolas, "Courier New";
+  font-family: 'Arial';
 }
 
-#controls{
-  display: block;
-  width: 100%;
+#yearvalue{
+  font-size:57px;
 }
 
-#leftside {
-  float: left;
-}
-
-#leftside .label {
-  text-transform: uppercase;
-  float: left;
-  margin: 3px 8px 0 0;
-}
 
 .clear{
   width: 100%; 
@@ -40,46 +30,14 @@ html, body
   width: 100%;
   display: block;
   position: relative;
-}
-#speedcontrol {
-  width: 300px;
-  margin: 0px 20px 0 15px;
-  float: left;
-}
-
-#year {
-  float: right;
-  margin-right: 10px;
-  text-align: right;
-}
-
-#year .sublabel {
-  margin-right: 7px;
-  text-transform: uppercase;
-  font-size: 16px;
-}
-
-#yearvalue {
-  font-size: 57px;
-  margin-bottom: 18px;
-}
-
-#header .sec {
-  float: left;
-  width: 177px;
-  text-align: center;
-  font-style: italic;
-  font-size: 12px;
+  padding-top: 10px; 
 }
 
 .button {
-  width: 50px;
   padding: 4px;
   cursor: pointer;
   text-align: center;
   font-size: 13px;
-  border: 1px solid #e0e0e0;
-  float: left;
 }
 
 .button:hover {
@@ -92,7 +50,6 @@ html, body
 }
 
 svg {
-  font: 14px 'Inconsolata', Monaco, "Lucida Console", Consolas, "Courier New";
   position: absolute;
   display: block;
 }
