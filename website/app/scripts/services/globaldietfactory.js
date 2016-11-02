@@ -32,9 +32,9 @@ angular.module('globalDietApp')
 
     return dataFactory;
   })
-  .factory('GlobalDietFactory', function ($http,CSV2Json) {
+  .factory('GlobalDietFactory', function ($http) {
     var dataFactory = {};
-    
+
     /** Get the url of the file that have all data information */
     function getDataSource(source, measure) {
       var data_folder = 'data/';
