@@ -152,16 +152,12 @@ D3Graphics.Flowing.init = function () {
         d3.min(D3Graphics.Flowing.data.items, function (s) { return s.values[0].year; }),
         d3.max(D3Graphics.Flowing.data.items, function (s) { return s.values[s.values.length - 1].year; })
     ]);
-    D3Graphics.Flowing.interpolation.color = function () {
-        d3.scale.ordinal().rangeRoundPoints([0, max]);
-        return d3.scale.quantize()
-            .domain(keys)
-            .range(["#ec3a64", "#8DC63F", "#ff0f9d", "#F68D3D", "#009EFF", "#FFCD31"]);
-    }
+    D3Graphics.Flowing.interpolation.color = d3.scale.ordinal().domain(keys)
+        .range(["#ec3c3c", "#77ec3c", "#3cece9", "#3c3cec", "#c63cec", "#ec3c82"]);
 
     // Init the tools 
     D3Graphics.Flowing.tools.bisectYear = d3.bisector(function (d) { return d.year; }).left;
-    D3Graphics.Flowing.tools.numberFormat = d3.format(".2f");
+    D3Graphics.Flowing.tools.numberFormat = d3.format(".1f");
 
     D3Graphics.Flowing.tools.area = d3.svg.area()
         .x(function (d) { return D3Graphics.Flowing.interpolation.x(d.year); })
@@ -171,52 +167,6 @@ D3Graphics.Flowing.init = function () {
     D3Graphics.Flowing.tools.line = d3.svg.line()
         .x(function (d) { return D3Graphics.Flowing.interpolation.x(d.year); })
         .y(function (d) { return D3Graphics.Flowing.interpolation.y(d.value); });
-
-    // Events
-    D3Graphics.Flowing.events.mouseover = function () {
-        if (D3Graphics.Flowing.controls.paused) {
-            D3Graphics.Flowing.controls.focus.style("display", null);
-        }
-    };
-    D3Graphics.Flowing.events.mouseout = function () {
-        if (D3Graphics.Flowing.controls.paused) {
-            D3Graphics.Flowing.controls.focus.style("display", "none");
-            d3.select(D3Graphics.Flowing.configuration.container_year).text(D3Graphics.Flowing.controls.current_year);
-        }
-    };
-    D3Graphics.Flowing.events.mouseclick = function () {
-        if (D3Graphics.Flowing.controls.paused) {
-            var xmove = D3Graphics.Flowing.interpolation.x.invert(d3.mouse(this)[0]);
-            var index = D3Graphics.Flowing.tools.bisectYear(D3Graphics.Flowing.controls.focus.datum().values, xmove, 1);
-            CURR_YEAR = D3Graphics.Flowing.controls.start_year + index;
-            D3Graphics.Flowing.tools.resort();
-        }
-    };
-    D3Graphics.Flowing.events.mousemove = function () {
-        if (D3Graphics.Flowing.controls.paused) {
-            var xmove = D3Graphics.Flowing.interpolation.x.invert(d3.mouse(this)[0]);
-            var index = 0;
-
-            D3Graphics.Flowing.controls.focus.select("circle")
-                .attr("cx", D3Graphics.Flowing.interpolation.x(xmove))
-                .attr("cy", function (d) {
-                    index = D3Graphics.Flowing.tools.bisectYear(d.values, xmove, 1);
-                    d3.select(D3Graphics.Flowing.configuration.container_year).text(D3Graphics.Flowing.data.start_year + index);
-                    //D3Graphics.Flowing.interpolation.y.domain([0, d.max * D3Graphics.Flowing.configuration.scale_factor]);
-                    D3Graphics.Flowing.interpolation.y.domain([0, D3Graphics.Flowing.data.groups[d.group].max * D3Graphics.Flowing.configuration.scale_factor]);
-                    return D3Graphics.Flowing.interpolation.y(d.values[index].value);
-                });
-            D3Graphics.Flowing.controls.focus.select("text")
-                .attr("x", D3Graphics.Flowing.interpolation.x(xmove))
-                .attr("y", function (d) {
-                    D3Graphics.Flowing.interpolation.y.domain([0, D3Graphics.Flowing.data.groups[d.group].max * D3Graphics.Flowing.configuration.scale_factor]);
-                    return D3Graphics.Flowing.interpolation.y(d.values[index].value);
-                })
-                .text(function (d) {
-                    return D3Graphics.Flowing.tools.numberFormat(d.values[index].value);
-                });
-        }
-    };
 }
 
 /** Render */
@@ -258,11 +208,11 @@ D3Graphics.Flowing.render = function () {
 
     svg.append("path")
         .attr("class", "area")
+        .style("fill", function (d) { return D3Graphics.Flowing.interpolation.color(d.group); })
         .attr("d", function (d) {
             D3Graphics.Flowing.interpolation.y.domain([0, D3Graphics.Flowing.data.groups[d.group].max]);
             return D3Graphics.Flowing.tools.area(d.values);
-        })
-        .style("fill", function(d){ return D3Graphics.Flowing.interpolation.color(d);});
+        });
 
     svg.append("path")
         .attr("class", "line")
@@ -287,22 +237,12 @@ D3Graphics.Flowing.render = function () {
         .attr("class", "value")
         .attr("text-anchor", "middle")
         .attr("dy", "-0.5em");
-
-    svg.append("rect")
-        .attr("class", "overlay")
-        .attr("width", D3Graphics.Flowing.configuration.items.width)
-        .attr("height", D3Graphics.Flowing.configuration.items.height)
-        .on("mouseover", D3Graphics.Flowing.events.mouseover)
-        .on("mouseout", D3Graphics.Flowing.events.mouseout)
-        .on("mousemove", D3Graphics.Flowing.events.mousemove)
-        .on("click", D3Graphics.Flowing.events.mouseclick);
-
-    // Creating function 
-
+    
     // Reording 
     D3Graphics.Flowing.tools.resort = function () {
 
         var year_index = D3Graphics.Flowing.controls.current_year - D3Graphics.Flowing.data.start_year;
+        console.log(year_index);
         Object.keys(D3Graphics.Flowing.data.groups).forEach(function (grp, i) {
 
             var partial_domain = D3Graphics.Flowing.data.items.filter(function (d) { return d.group == grp; })
@@ -402,6 +342,61 @@ D3Graphics.Flowing.render = function () {
                 return D3Graphics.Flowing.interpolation.y(d.values[index].value);
             });
     }
+
+    // Events
+    D3Graphics.Flowing.events.mouseover = function () {
+        if (D3Graphics.Flowing.controls.paused) {
+            D3Graphics.Flowing.controls.focus.style("display", null);
+        }
+    }
+    D3Graphics.Flowing.events.mouseout = function () {
+        if (D3Graphics.Flowing.controls.paused) {
+            D3Graphics.Flowing.controls.focus.style("display", "none");
+            d3.select(D3Graphics.Flowing.configuration.container_year).text(D3Graphics.Flowing.controls.current_year);
+        }
+    }
+    D3Graphics.Flowing.events.mouseclick = function () {
+        if (D3Graphics.Flowing.controls.paused) {            
+            var xmove = D3Graphics.Flowing.interpolation.x.invert(d3.mouse(this)[0]);
+            var index = D3Graphics.Flowing.tools.bisectYear(D3Graphics.Flowing.controls.focus.datum().values, xmove, 1);
+            D3Graphics.Flowing.tools.current_year = D3Graphics.Flowing.controls.start_year + index;
+            D3Graphics.Flowing.tools.resort();
+        }
+    }
+    D3Graphics.Flowing.events.mousemove = function () {
+        if (D3Graphics.Flowing.controls.paused) {
+            var xmove = D3Graphics.Flowing.interpolation.x.invert(d3.mouse(this)[0]);
+            var index = 0;
+
+            D3Graphics.Flowing.controls.focus.select("circle")
+                .attr("cx", D3Graphics.Flowing.interpolation.x(xmove))
+                .attr("cy", function (d) {
+                    index = D3Graphics.Flowing.tools.bisectYear(d.values, xmove, 1);
+                    d3.select(D3Graphics.Flowing.configuration.container_year).text(D3Graphics.Flowing.data.start_year + index);
+                    //D3Graphics.Flowing.interpolation.y.domain([0, d.max * D3Graphics.Flowing.configuration.scale_factor]);
+                    D3Graphics.Flowing.interpolation.y.domain([0, D3Graphics.Flowing.data.groups[d.group].max * D3Graphics.Flowing.configuration.scale_factor]);
+                    return D3Graphics.Flowing.interpolation.y(d.values[index].value);
+                });
+            D3Graphics.Flowing.controls.focus.select("text")
+                .attr("x", D3Graphics.Flowing.interpolation.x(xmove))
+                .attr("y", function (d) {
+                    D3Graphics.Flowing.interpolation.y.domain([0, D3Graphics.Flowing.data.groups[d.group].max * D3Graphics.Flowing.configuration.scale_factor]);
+                    return D3Graphics.Flowing.interpolation.y(d.values[index].value);
+                })
+                .text(function (d) {
+                    return D3Graphics.Flowing.tools.numberFormat(d.values[index].value);
+                });
+        }
+    }
+
+    svg.append("rect")
+        .attr("class", "overlay")
+        .attr("width", D3Graphics.Flowing.configuration.items.width)
+        .attr("height", D3Graphics.Flowing.configuration.items.height)
+        .on("mouseover", D3Graphics.Flowing.events.mouseover)
+        .on("mouseout", D3Graphics.Flowing.events.mouseout)
+        .on("mousemove", D3Graphics.Flowing.events.mousemove)
+        .on("click", D3Graphics.Flowing.events.mouseclick);
 
     // Speed control buttons
     d3.selectAll("#scalecontrol .button").on("click", function () {

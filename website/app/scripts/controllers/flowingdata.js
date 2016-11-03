@@ -9,12 +9,13 @@
  */
 angular.module('globalDietApp')
   .controller('FlowingdataCtrl', function ($scope, GlobalDietFactory) {
-    var source = 'food_group';
     var measure = 'calories';
+
+    $scope.source = 'food_group';
 
     $scope.countries = [];
 
-    GlobalDietFactory.list(source, measure).then(function (data) {
+    GlobalDietFactory.list($scope.source, measure).then(function (data) {
 
       $scope.countries = GlobalDietFactory.getCountries(data);
 
