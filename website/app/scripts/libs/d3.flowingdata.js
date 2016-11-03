@@ -242,7 +242,7 @@ D3Graphics.Flowing.render = function () {
     D3Graphics.Flowing.tools.resort = function () {
 
         var year_index = D3Graphics.Flowing.controls.current_year - D3Graphics.Flowing.data.start_year;
-        console.log(year_index);
+        
         Object.keys(D3Graphics.Flowing.data.groups).forEach(function (grp, i) {
 
             var partial_domain = D3Graphics.Flowing.data.items.filter(function (d) { return d.group == grp; })
