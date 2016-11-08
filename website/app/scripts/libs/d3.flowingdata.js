@@ -22,7 +22,8 @@ D3Graphics.Flowing.data = {
     groups: {},
     items: null,
     start_year: 0,
-    end_year: 0
+    end_year: 0,
+    subgroup: []
 }
 
 /** Interpolation functions */
@@ -31,7 +32,8 @@ D3Graphics.Flowing.interpolation = {
     y0: null,
     x: null,
     y: null,
-    color: null
+    color: null,
+    color_subgroup: null
 }
 
 D3Graphics.Flowing.controls = {
@@ -57,31 +59,7 @@ D3Graphics.Flowing.tools = {
     line: null,
     resort: null,
     timer: null,
-    rescale: null,
-    wrap: function (text, width) {
-        text.each(function () {
-            var text = d3.select(this),
-                words = text.text().split(/\s+/).reverse(),
-                word,
-                line = [],
-                lineNumber = 0,
-                lineHeight = 1.2, // ems
-                y = text.attr("y"),
-                dy = parseFloat(text.attr("dy")),
-                tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-            while (word = words.pop()) {
-                line.push(word);
-                tspan.text(line.join(" "));
-                if (tspan.node().getComputedTextLength() > width) {
-                    line.pop();
-                    tspan.text(line.join(" "));
-                    line = [word];
-                    tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", lineHeight + dy + "em").text(word);
-                }
-            }
-        });
-    }
-
+    rescale: null
 }
 
 /** Built all data structure require by graphic from data */
@@ -94,12 +72,17 @@ D3Graphics.Flowing.compile = function () {
         var words = fname.split("_");
         // Get the group's name
         var group = words[0];
+        // Get subgroup
+        var subgroup = words.slice(1, words.length).join("_");
+        if(D3Graphics.Flowing.data.subgroup.indexOf(subgroup) < 0)
+            D3Graphics.Flowing.data.subgroup.push(subgroup);
         // Get printable name
         var real_name = words.slice(1, words.length).join(" ");
         // Return data structure
         return {
             field: real_name,
             group: group,
+            subgroup: subgroup,
             // Get all rows only from the column required
             values: D3Graphics.Flowing.data.source.map(function (d) {
                 return { year: parseInt(d.year), value: parseFloat(d[fname]) };
@@ -153,7 +136,10 @@ D3Graphics.Flowing.init = function () {
         d3.max(D3Graphics.Flowing.data.items, function (s) { return s.values[s.values.length - 1].year; })
     ]);
     D3Graphics.Flowing.interpolation.color = d3.scale.ordinal().domain(keys)
-        .range(["#ec3c3c", "#77ec3c", "#3cece9", "#3c3cec", "#c63cec", "#ec3c82"]);
+                                                .range(["#ec3c3c", "#77ec3c", "#3cece9", "#3c3cec", "#c63cec", "#ec3c82"]);
+    var colors = 'FF0000 FF4500 EE4000 CD3700 CD0000 8B0000 A2CD5A 66CD00 458B00 228B22 006400 EED5B7 CDAA7D 8B7355 8B4513 EEC900 00BFFF 1E90FF 1C86EE 104E8B 0000CD FFA500 FF8C00'.split(' ').map(function (c) { return '#' + c; });
+    D3Graphics.Flowing.interpolation.color_subgroup = d3.scale.category20().domain(D3Graphics.Flowing.data.subgroup);
+    //D3Graphics.Flowing.interpolation.color_subgroup = d3.scale.ordinal().domain(D3Graphics.Flowing.data.subgroup).range(colors);
 
     // Init the tools 
     D3Graphics.Flowing.tools.bisectYear = d3.bisector(function (d) { return d.year; }).left;
@@ -208,7 +194,7 @@ D3Graphics.Flowing.render = function () {
 
     svg.append("path")
         .attr("class", "area")
-        .style("fill", function (d) { return D3Graphics.Flowing.interpolation.color(d.group); })
+        .style("fill", function (d) { return D3Graphics.Flowing.interpolation.color_subgroup(d.subgroup); })
         .attr("d", function (d) {
             D3Graphics.Flowing.interpolation.y.domain([0, D3Graphics.Flowing.data.groups[d.group].max]);
             return D3Graphics.Flowing.tools.area(d.values);
@@ -246,9 +232,7 @@ D3Graphics.Flowing.render = function () {
         Object.keys(D3Graphics.Flowing.data.groups).forEach(function (grp, i) {
 
             var partial_domain = D3Graphics.Flowing.data.items.filter(function (d) { return d.group == grp; })
-                .sort(function (a, b) {
-                    return d3.descending(a.values[year_index].value, b.values[year_index].value);
-                })
+                .sort(function (a, b) { return d3.descending(a.values[year_index].value, b.values[year_index].value); })
                 .map(function (d, i) { return d.field; });
 
             var num_left = D3Graphics.Flowing.configuration.rows - partial_domain.length;
@@ -399,11 +383,9 @@ D3Graphics.Flowing.render = function () {
         .on("click", D3Graphics.Flowing.events.mouseclick);
 
     // Speed control buttons
-    d3.selectAll("#scalecontrol .button").on("click", function () {
-        D3Graphics.Flowing.controls.scale = d3.select(this).attr("data-scale");
-        d3.select("#scalecontrol .current").classed("current", false);
+    d3.selectAll("#sourcecontrol .button").on("click", function () {
+        d3.select("#sourcecontrol .current").classed("current", false);
         d3.select(this).classed("current", true);
-        D3Graphics.Flowing.tools.rescale.rescale();
     });
 
     d3.selectAll("#speedcontrol .button").on("click", function () {
