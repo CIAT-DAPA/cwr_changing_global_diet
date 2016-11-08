@@ -27,24 +27,20 @@
 			<div id="navbar">
 				<ul class="nav navbar-nav">
 					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Source<span class="caret"></span></a>
-						<ul class="dropdown-menu" id="sourcecontrol">
-							<li><a class="button">Crop</a></li>
-							<li><a class="button  current">Food group</a></li>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{selectedSource.title}}<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li ng-repeat="item in sources" ng-click="changeSource(this);"><a>{{item.title}}</a></li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="nav navbar-nav">
 					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Measure<span class="caret"></span></a>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"  >{{selectedMeasure.title}}<span class="caret"></span></a>
 						<ul class="dropdown-menu">
-							<li><a href="#">Calories</a></li>
-							<li><a href="#">Fat</a></li>
-							<li><a href="#">Food</a></li>
-							<li><a href="#">Protein</a></li>
+							<li ng-repeat="item in measures" ng-click="changeMeasure(this);"><a>{{item.title}}</a></li>
 						</ul>
 					</li>
-				</ul>				
+				</ul>
 				<ul class="nav navbar-nav">
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Countries<span class="caret"></span></a>
@@ -58,7 +54,7 @@
 							<li><a href="#">One more separated link</a></li>
 						</ul>
 					</li>
-				</ul>				
+				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li><a>Year:</a></li>
 					<li><a id="yearvalue">1961</a></li>

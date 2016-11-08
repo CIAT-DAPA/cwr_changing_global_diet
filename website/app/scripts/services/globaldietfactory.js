@@ -38,7 +38,7 @@ angular.module('globalDietApp')
     /** Get the url of the file that have all data information */
     function getDataSource(source, measure) {
       var data_folder = 'data/';
-      return data_folder + source + '/' + measure + '.csv';
+      return data_folder + source + '/' + measure;
     }
 
 
@@ -60,6 +60,22 @@ angular.module('globalDietApp')
         countries.push(words[0]);
       });
       return countries;
+    }
+
+    dataFactory.getSources = function () {
+      var sources=[];
+      sources.push({title:'Food group',folder:'food_group'});
+      sources.push({title:'Crop',folder:'crop'});
+      return sources;
+    }
+
+    dataFactory.getMeasures = function () {
+      var measures=[];
+      measures.push({title:'Calories',file:'calories.csv'});
+      measures.push({title:'Fat',file:'fat.csv'});
+      measures.push({title:'Food',file:'food.csv'});
+      measures.push({title:'Protein',file:'protein.csv'});
+      return measures;
     }
 
     return dataFactory;
