@@ -150,7 +150,7 @@ D3Graphics.Flowing.init = function () {
 
     D3Graphics.Flowing.tools.area = d3.svg.area()
         .x(function (d) { return D3Graphics.Flowing.interpolation.x(d.year); })
-        .y0(D3Graphics.Flowing.configuration.items.height * D3Graphics.Flowing.configuration.scale_factor)
+        .y0(D3Graphics.Flowing.configuration.items.height )
         .y1(function (d) { return D3Graphics.Flowing.interpolation.y(d.value); });
 
     D3Graphics.Flowing.tools.line = d3.svg.line()
@@ -300,40 +300,7 @@ D3Graphics.Flowing.render = function () {
             }
         }
     }
-/*
-    D3Graphics.Flowing.tools.rescale = function () {
-        var index = D3Graphics.Flowing.controls.current_year - D3Graphics.Flowing.data.start_year;
-        svg.select("path.area")
-            .transition()
-            .duration(600)
-            .attr("d", function (d) {
-                D3Graphics.Flowing.interpolation.y.domain([0, d.max * D3Graphics.Flowing.configuration.scale_factor]);
-                return D3Graphics.Flowing.tools.area(d.values);
-            });
-        svg.select("path.line")
-            .transition()
-            .duration(600)
-            .attr("d", function (d) {
-                D3Graphics.Flowing.interpolation.y.domain([0, d.max * D3Graphics.Flowing.configuration.scale_factor]);
-                return D3Graphics.Flowing.tools.line(d.values);
-            });
 
-        D3Graphics.Flowing.controls.focus.select("circle")
-            .transition()
-            .duration(600)
-            .attr("cy", function (d) {
-                D3Graphics.Flowing.interpolation.y.domain([0, d.max * D3Graphics.Flowing.configuration.scale_factor]);
-                return D3Graphics.Flowing.interpolation.y(d.values[index].value);
-            });
-        D3Graphics.Flowing.controls.focus.select("text")
-            .transition()
-            .duration(600)
-            .attr("y", function (d) {
-                D3Graphics.Flowing.interpolation.y.domain([0, d.max * D3Graphics.Flowing.configuration.scale_factor]);
-                return D3Graphics.Flowing.interpolation.y(d.values[index].value);
-            });
-    }
-*/
     // Events
     D3Graphics.Flowing.events.mouseover = function () {
         if (D3Graphics.Flowing.controls.paused) {
