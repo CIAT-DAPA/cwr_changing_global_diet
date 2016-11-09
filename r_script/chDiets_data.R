@@ -84,6 +84,8 @@ all_data3 <- all_data2
 # change group name
 all_data3$Item <- gsub(pattern = '* \\((.*?)\\)', replacement = '', x = all_data3$Item)
 all_data3$Item <- tolower(gsub(pattern = ' ', replacement = '_', x = all_data3$Item))
+all_data3$Item <- tolower(gsub(pattern = ',', replacement = '', x = all_data3$Item))
+all_data3$Item <- gsub(pattern = '\\_$', replacement = '', x = all_data3$Item)
 all_data3$Country <- as.character(all_data3$Country)
 all_data3$Country[grep(pattern = "Côte d'Ivoire", x = all_data3$Country, fixed = TRUE)] <- 'Ivory Coast'
 
@@ -107,7 +109,7 @@ lapply(1:length(measures), function(i){
   subData[,ncol(subData)] <- paste(subData[,ncol(subData)], ',', sep='')
   
   # write.delim(subData, paste(nicerNms[i], '.tsv', sep = ''))
-  write.csv(subData, file = paste('./_data_sources/', nicerNms[i], '_crop.csv', sep = ''), row.names = FALSE, sep = "|")
+  write.csv(subData, file = paste('./_data_sources/crop/', nicerNms[i], '.csv', sep = ''), row.names = FALSE, sep = "|")
   
 })
 
@@ -123,6 +125,8 @@ names(all_data3)[ncol(all_data3)] <- 'Value'
 all_data3$food_group <- tolower(gsub(pattern = ' ', replacement = '_', x = all_data3$food_group))
 all_data3$Item <- gsub(pattern = '* \\((.*?)\\)', replacement = '', x = all_data3$Item)
 all_data3$Item <- tolower(gsub(pattern = ' ', replacement = '-', x = all_data3$Item))
+all_data3$Item <- tolower(gsub(pattern = ',', replacement = '', x = all_data3$Item))
+all_data3$Item <- gsub(pattern = '\\-$', replacement = '', x = all_data3$Item)
 
 # create data sources for each metric
 measures <- all_data3$Element %>% unique %>% as.character
@@ -141,7 +145,7 @@ lapply(1:length(measures), function(i){
   subData[,ncol(subData)] <- paste(subData[,ncol(subData)], ',', sep='')
   
   # write.delim(subData, paste(nicerNms[i], '.tsv', sep = ''))
-  write.csv(subData, file = paste('./_data_sources/', nicerNms[i], '_fgroup_&_crop.csv', sep = ''), row.names = FALSE, sep = "|")
+  write.csv(subData, file = paste('./_data_sources/global/', nicerNms[i], '.csv', sep = ''), row.names = FALSE, sep = "|")
   
 })
 
