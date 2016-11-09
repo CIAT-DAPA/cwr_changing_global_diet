@@ -145,9 +145,9 @@ Flowing.prototype.init = function () {
     ]);
     this.interpolation.color = d3.scale.ordinal().domain(keys)
         .range(["#ec3c3c", "#77ec3c", "#3cece9", "#3c3cec", "#c63cec", "#ec3c82"]);
-    this.interpolation.color_subgroup = d3.scale.category20().domain(this.data.subgroup);
-    //var colors = 'FF0000 FF4500 EE4000 CD3700 CD0000 8B0000 A2CD5A 66CD00 458B00 228B22 006400 EED5B7 CDAA7D 8B7355 8B4513 EEC900 00BFFF 1E90FF 1C86EE 104E8B 0000CD FFA500 FF8C00'.split(' ').map(function (c) { return '#' + c; });
-    //this.interpolation.color_subgroup = d3.scale.ordinal().domain(this.data.subgroup).range(colors);
+    //this.interpolation.color_subgroup = d3.scale.category20().domain(this.data.subgroup);
+    var colors = 'A8D1D7 F3928E CC97AD CBB7AE 89A5C6 F9E061 D2CC6E 979797 FFC265 BEC7C2 7EC1A6'.split(' ').map(function (c) { return '#' + c; });
+    this.interpolation.color_subgroup = d3.scale.ordinal().domain(this.data.subgroup).range(colors);
 
     // Init the tools 
     this.tools.bisectYear = d3.bisector(function (d) { return d.year; }).left;
@@ -173,7 +173,7 @@ Flowing.prototype.render = function () {
     var that = this;
 
     this.dispose();
-    
+
     // Compile data
     this.compile();
 

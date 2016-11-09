@@ -11,6 +11,7 @@ angular.module('globalDietApp')
   .controller('FlowingdataCtrl', function ($scope, GlobalDietFactory) {
     $scope.init = true;
     $scope.graphic = new Flowing();
+    $("#countries").SumoSelect({ okCancelInMulti: true, placeholder: 'Select here', search: true, searchText: 'Enter here.' });
 
     $scope.sources = GlobalDietFactory.getSources();
     $scope.selectedSource = $scope.sources[0];
@@ -33,11 +34,12 @@ angular.module('globalDietApp')
 
     function updateData() {
       GlobalDietFactory.list($scope.selectedSource.folder, $scope.selectedMeasure.file).then(function (data) {
+        clearCountries();
         $scope.countries = GlobalDietFactory.getCountries(data);
         $scope.data = data;
         $scope.selectedCountries = $scope.countries.slice(0, 6).map(function(c){ return c.value;});        
-        $scope.init = true;
-        $("#countries").SumoSelect({ okCancelInMulti: true, placeholder: 'Select here', search: true, searchText: 'Enter here.' });
+        $scope.init = true;       
+        
         $scope.countries.forEach(function (item, i) {
           $('#countries')[0].sumo.add(item.value,item.text);
           if (i < 6)
@@ -47,6 +49,14 @@ angular.module('globalDietApp')
         filterData();
         draw();
       });
+    }
+
+    function clearCountries(){
+      $scope.init = true;
+      $scope.countries.forEach(function (item, i) {
+            $('#countries')[0].sumo.remove(0);
+        });
+      $scope.init = false;
     }
 
     $('#countries').change(function () {
