@@ -78,6 +78,7 @@ angular.module('globalDietApp')
       var graphic = D3Graphics.Flowing;
       graphic.configuration.container = '#charts';
       graphic.configuration.container_header = '#charts_header';
+      graphic.configuration.container_year = '#yearvalue';
       graphic.controls.speed = 750;
       graphic.data.source = $scope.selectedData;
       graphic.render();

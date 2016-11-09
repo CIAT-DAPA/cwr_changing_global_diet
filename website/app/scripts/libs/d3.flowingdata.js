@@ -7,7 +7,7 @@ D3Graphics.Flowing = D3Graphics.Flowing || {};
 D3Graphics.Flowing.configuration = {
     container: '',
     container_header: '',
-    container_year: '#yearvalue',
+    container_year: '',
     max_columns: 6,
     canvas: { width: 1000, height: 0, margin: { top: 10, right: 10, bottom: 10, left: 10 } },
     items: { width: 180, height: 90, margin: { top: 5, right: 5, bottom: 5, left: 5 }, width_full: 180, height_full: 100 },
@@ -252,8 +252,8 @@ D3Graphics.Flowing.render = function () {
                 .sort(function (a, b) { return y1(a.field) - y1(b.field); });
 
             var transition = d3.select(D3Graphics.Flowing.configuration.container).transition().duration(D3Graphics.Flowing.controls.speed),
-                delay = function (d, i) { return i * 50; };
-
+                delay = function (d, i) { return i * 50; };            
+            
             transition.selectAll("svg." + grp)
                 .delay(delay)
                 .style("top", function (d) { return y1(d.field) + "px"; });
