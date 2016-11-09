@@ -76,7 +76,7 @@ angular.module('globalDietApp')
       var measures=[];
       measures.push({title:'Calories (kcal/capita/day)',file:'calories.csv'});
       measures.push({title:'Fat (g/capita/day)',file:'fat.csv'});
-      measures.push({title:'Food quantity (g/capita/day)',file:'food_quantity.csv'});
+      measures.push({title:'Food weight (g/capita/day)',file:'food_quantity.csv'});
       measures.push({title:'Protein (g/capita/day)',file:'protein.csv'});
       return measures;
     }

@@ -38,7 +38,7 @@ angular.module('globalDietApp')
         filterData();
         draw();
         $scope.init = true;
-        $("#countries").SumoSelect({ okCancelInMulti: true, placeholder: 'Select countries' });
+        $("#countries").SumoSelect({ okCancelInMulti: true, placeholder: 'Select countries', search: true, searchText: 'Enter here.' });
         $scope.countries.forEach(function (item, i) {
           $('#countries')[0].sumo.add(item.value,item.text);
           if (i < 6)
@@ -75,11 +75,14 @@ angular.module('globalDietApp')
     function draw() {
       $('#charts').html('');
       $('#charts_header').html('');
-      var graphic = D3Graphics.Flowing;
+      /*var graphic = D3Graphics.Flowing;
       graphic.configuration.container = '#charts';
       graphic.configuration.container_header = '#charts_header';
       graphic.configuration.container_year = '#yearvalue';
       graphic.controls.speed = 750;
+      graphic.data.source = $scope.selectedData;
+      graphic.render();*/
+      var graphic = new Flowing();
       graphic.data.source = $scope.selectedData;
       graphic.render();
     }
