@@ -64,6 +64,9 @@ D3Graphics.Flowing.tools = {
 
 /** Built all data structure require by graphic from data */
 D3Graphics.Flowing.compile = function () {
+    // Init fields
+    D3Graphics.Flowing.data.groups = {};
+    D3Graphics.Flowing.data.subgroup= [];
     // Get a list of all columns' names from the file source. It omit the field year
     var fields = d3.keys(D3Graphics.Flowing.data.source[0]).filter(function (key) { return key !== "year"; });
     // Mapping values to data structure. In this mapping get values for every item of the group
@@ -123,7 +126,7 @@ D3Graphics.Flowing.init = function () {
 
     // Set the interpolation values    
     var keys = Object.keys(D3Graphics.Flowing.data.groups);
-    D3Graphics.Flowing.configuration.rows = keys.length;
+    D3Graphics.Flowing.configuration.columns = keys.length;
     var max = D3Graphics.Flowing.configuration.canvas.width - D3Graphics.Flowing.configuration.items.width_full - (items_margin_right + items_margin_left);
     D3Graphics.Flowing.interpolation.x0 = d3.scale.ordinal().rangeRoundPoints([0, max]).domain(keys);
     var height_max = (D3Graphics.Flowing.configuration.items.height_full * keys.length) * 1.8;
@@ -136,9 +139,9 @@ D3Graphics.Flowing.init = function () {
         d3.max(D3Graphics.Flowing.data.items, function (s) { return s.values[s.values.length - 1].year; })
     ]);
     D3Graphics.Flowing.interpolation.color = d3.scale.ordinal().domain(keys)
-                                                .range(["#ec3c3c", "#77ec3c", "#3cece9", "#3c3cec", "#c63cec", "#ec3c82"]);
-    var colors = 'FF0000 FF4500 EE4000 CD3700 CD0000 8B0000 A2CD5A 66CD00 458B00 228B22 006400 EED5B7 CDAA7D 8B7355 8B4513 EEC900 00BFFF 1E90FF 1C86EE 104E8B 0000CD FFA500 FF8C00'.split(' ').map(function (c) { return '#' + c; });
+                                                .range(["#ec3c3c", "#77ec3c", "#3cece9", "#3c3cec", "#c63cec", "#ec3c82"]);    
     D3Graphics.Flowing.interpolation.color_subgroup = d3.scale.category20().domain(D3Graphics.Flowing.data.subgroup);
+    //var colors = 'FF0000 FF4500 EE4000 CD3700 CD0000 8B0000 A2CD5A 66CD00 458B00 228B22 006400 EED5B7 CDAA7D 8B7355 8B4513 EEC900 00BFFF 1E90FF 1C86EE 104E8B 0000CD FFA500 FF8C00'.split(' ').map(function (c) { return '#' + c; });
     //D3Graphics.Flowing.interpolation.color_subgroup = d3.scale.ordinal().domain(D3Graphics.Flowing.data.subgroup).range(colors);
 
     // Init the tools 
@@ -153,6 +156,9 @@ D3Graphics.Flowing.init = function () {
     D3Graphics.Flowing.tools.line = d3.svg.line()
         .x(function (d) { return D3Graphics.Flowing.interpolation.x(d.year); })
         .y(function (d) { return D3Graphics.Flowing.interpolation.y(d.value); });
+    
+    // Controls
+    D3Graphics.Flowing.controls.speed = 750;
 }
 
 /** Render */
@@ -162,7 +168,8 @@ D3Graphics.Flowing.render = function () {
 
     // Init configurations and Controls
     D3Graphics.Flowing.init();
-
+    
+    
     // Start chart for each item
     var svg_header = d3.select(D3Graphics.Flowing.configuration.container_header).selectAll("svg")
         .data(Object.keys(D3Graphics.Flowing.data.groups))
@@ -173,7 +180,7 @@ D3Graphics.Flowing.render = function () {
         .append("text")
         .attr("dy", "1.1em")
         .attr("dx", "0.4em")
-        .text(function (d) { return d.charAt(0).toUpperCase() + d.slice(1); })
+        .text(function (d) { var title = d.charAt(0).toUpperCase() + d.slice(1); return title.replaceAll('-',' '); })
         .attr("transform", "translate(" + D3Graphics.Flowing.configuration.items.margin.left + "," + D3Graphics.Flowing.configuration.items.margin.top + ")");
 
     var svg = d3.select(D3Graphics.Flowing.configuration.container).selectAll("svg")
@@ -210,7 +217,7 @@ D3Graphics.Flowing.render = function () {
         .attr("class", "foodname")
         .attr("dy", "1.1em")
         .attr("dx", "0.4em")
-        .text(function (d) { return d.field; });
+        .text(function (d) { return d.field.charAt(0).toUpperCase() + d.field.slice(1); });
 
     // Focusing on mouseovers
     D3Graphics.Flowing.controls.focus = svg.append("g")
@@ -235,7 +242,7 @@ D3Graphics.Flowing.render = function () {
                 .sort(function (a, b) { return d3.descending(a.values[year_index].value, b.values[year_index].value); })
                 .map(function (d, i) { return d.field; });
 
-            var num_left = D3Graphics.Flowing.configuration.rows - partial_domain.length;
+            var num_left = D3Graphics.Flowing.configuration.columns - partial_domain.length;
 
             var full_domain = num_left > 0 ? partial_domain.concat(d3.range(num_left)) : partial_domain;
 
@@ -293,7 +300,7 @@ D3Graphics.Flowing.render = function () {
             }
         }
     }
-
+/*
     D3Graphics.Flowing.tools.rescale = function () {
         var index = D3Graphics.Flowing.controls.current_year - D3Graphics.Flowing.data.start_year;
         svg.select("path.area")
@@ -326,7 +333,7 @@ D3Graphics.Flowing.render = function () {
                 return D3Graphics.Flowing.interpolation.y(d.values[index].value);
             });
     }
-
+*/
     // Events
     D3Graphics.Flowing.events.mouseover = function () {
         if (D3Graphics.Flowing.controls.paused) {

@@ -56,25 +56,28 @@ angular.module('globalDietApp')
       var countries = [];
       keys.forEach(function(c){
         var words = c.split("_");
-        if(countries.indexOf(words[0]) < 0)
-        countries.push(words[0]);
+        if(countries.indexOf(words[0]) < 0 && words[0] !== "")
+          countries.push(words[0]);
       });
-      return countries;
+      return countries.map(function(c){
+        var title = c.charAt(0).toUpperCase() + c.slice(1);  
+        return {text:c.replaceAll('-',' '),value:c}; 
+      });
     }
 
     dataFactory.getSources = function () {
       var sources=[];
-      sources.push({title:'Food group',folder:'food_group'});
+      sources.push({title:'Food weight',folder:'food_group'});
       sources.push({title:'Crop',folder:'crop'});
       return sources;
     }
 
     dataFactory.getMeasures = function () {
       var measures=[];
-      measures.push({title:'Calories',file:'calories.csv'});
-      measures.push({title:'Fat',file:'fat.csv'});
-      measures.push({title:'Food',file:'food.csv'});
-      measures.push({title:'Protein',file:'protein.csv'});
+      measures.push({title:'Calories (kcal/capita/day)',file:'calories.csv'});
+      measures.push({title:'Fat (g/capita/day)',file:'fat.csv'});
+      measures.push({title:'Food quantity (g/capita/day)',file:'food_quantity.csv'});
+      measures.push({title:'Protein (g/capita/day)',file:'protein.csv'});
       return measures;
     }
 
