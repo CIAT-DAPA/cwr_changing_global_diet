@@ -130,7 +130,7 @@ D3Graphics.Flowing.init = function () {
     var max = D3Graphics.Flowing.configuration.canvas.width - D3Graphics.Flowing.configuration.items.width_full - (items_margin_right + items_margin_left);
     D3Graphics.Flowing.interpolation.x0 = d3.scale.ordinal().rangeRoundPoints([0, max]).domain(keys);
     var height_max = (D3Graphics.Flowing.configuration.items.height_full * keys.length) * 1.8;
-    D3Graphics.Flowing.interpolation.y0 = d3.scale.ordinal().domain(d3.range(keys.length)).rangeRoundPoints([0, height_max]);
+    D3Graphics.Flowing.interpolation.y0 = d3.scale.ordinal().domain(d3.range(keys.length)).rangeRoundPoints([0, height_max ]);
     D3Graphics.Flowing.interpolation.x = d3.scale.linear().range([0, D3Graphics.Flowing.configuration.items.width]);
     D3Graphics.Flowing.interpolation.y = d3.scale.linear().range([D3Graphics.Flowing.configuration.items.height, 0]);
     // Min and Max year for the x domain
@@ -150,7 +150,7 @@ D3Graphics.Flowing.init = function () {
 
     D3Graphics.Flowing.tools.area = d3.svg.area()
         .x(function (d) { return D3Graphics.Flowing.interpolation.x(d.year); })
-        .y0(D3Graphics.Flowing.configuration.items.height)
+        .y0(D3Graphics.Flowing.configuration.items.height * D3Graphics.Flowing.configuration.scale_factor)
         .y1(function (d) { return D3Graphics.Flowing.interpolation.y(d.value); });
 
     D3Graphics.Flowing.tools.line = d3.svg.line()
@@ -214,7 +214,7 @@ D3Graphics.Flowing.render = function () {
             return D3Graphics.Flowing.tools.line(d.values);
         });
     svg.append("text")
-        .attr("class", "foodname")
+        .attr("class", "item_name")
         .attr("dy", "1.1em")
         .attr("dx", "0.4em")
         .text(function (d) { return d.field.charAt(0).toUpperCase() + d.field.slice(1); });
