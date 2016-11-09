@@ -69,6 +69,7 @@ angular.module('globalDietApp')
       var sources=[];
       sources.push({title:'Food weight',folder:'food_group'});
       sources.push({title:'Crop',folder:'crop'});
+      sources.push({title:'Global',folder:'global'});
       return sources;
     }
 

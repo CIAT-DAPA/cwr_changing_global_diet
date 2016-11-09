@@ -36,8 +36,7 @@ function Flowing() {
         focus: null,
         paused: false,
         current_year: 0,
-        speed: 750,
-        scale: 'group'
+        speed: 2000
     };
 
     this.events = {
@@ -55,8 +54,15 @@ function Flowing() {
         line: null,
         resort: null,
         timer: null,
-        rescale: null
+        started: false,
+        id: null,
+
     }
+}
+
+Flowing.prototype.dispose = function () {
+    if(this.controls.id!=null)
+        clearTimeout(this.controls.id);
 }
 
 
@@ -157,13 +163,17 @@ Flowing.prototype.init = function () {
         .y(function (d) { return that.interpolation.y(d.value * that.configuration.scale_factor); });
 
     // Controls
-    this.controls.speed = 750;
+    this.controls.speed = 2000;
+    this.controls.started = false;
+    this.controls.id= null;
 }
 
 /** Render */
 Flowing.prototype.render = function () {
     var that = this;
 
+    this.dispose();
+    
     // Compile data
     this.compile();
 
@@ -262,7 +272,7 @@ Flowing.prototype.render = function () {
     }
 
     this.tools.timer = function () {        
-        if (!that.controls.paused) {
+        if (!that.controls.paused) {            
             that.controls.current_year += 1;
             d3.select(that.configuration.container_year).text(that.controls.current_year);
 
@@ -277,14 +287,12 @@ Flowing.prototype.render = function () {
                 .attr("cx", that.interpolation.x(that.controls.current_year))
                 .attr("cy", function (d) {
                     index = that.tools.bisectYear(d.values, that.controls.current_year, 1);
-                    //this.interpolation.y.domain([0, d.max * this.configuration.scale_factor]);
                     that.interpolation.y.domain([0, that.data.groups[d.group].max]);
                     return that.interpolation.y(d.values[index].value * that.configuration.scale_factor);
                 });
             that.controls.focus.select("text")
                 .attr("x", that.interpolation.x(that.controls.current_year))
                 .attr("y", function (d) {
-                    //this.interpolation.y.domain([0, d.max * this.configuration.scale_factor]);
                     that.interpolation.y.domain([0, that.data.groups[d.group].max]);
                     return that.interpolation.y(d.values[index].value * that.configuration.scale_factor);
                 })
@@ -293,11 +301,9 @@ Flowing.prototype.render = function () {
             // Go again.
             if (that.controls.current_year == that.data.end_year) {
                 that.controls.current_year = that.data.start_year;
-                setTimeout(that.tools.timer, that.controls.speed * 5);
             }
-            else {
-                setTimeout(that.tools.timer, that.controls.speed);
-            }
+            if(!that.controls.started)
+                that.controls.id = setTimeout(that.tools.timer, that.controls.speed );
         }
     }
 

@@ -10,6 +10,7 @@
 angular.module('globalDietApp')
   .controller('FlowingdataCtrl', function ($scope, GlobalDietFactory) {
     $scope.init = true;
+    $scope.graphic = new Flowing();
 
     $scope.sources = GlobalDietFactory.getSources();
     $scope.selectedSource = $scope.sources[0];
@@ -34,18 +35,17 @@ angular.module('globalDietApp')
       GlobalDietFactory.list($scope.selectedSource.folder, $scope.selectedMeasure.file).then(function (data) {
         $scope.countries = GlobalDietFactory.getCountries(data);
         $scope.data = data;
-        $scope.selectedCountries = $scope.countries.slice(0, 6).map(function(c){ return c.value;});
-        filterData();
-        draw();
+        $scope.selectedCountries = $scope.countries.slice(0, 6).map(function(c){ return c.value;});        
         $scope.init = true;
-        $("#countries").SumoSelect({ okCancelInMulti: true, placeholder: 'Select countries', search: true, searchText: 'Enter here.' });
+        $("#countries").SumoSelect({ okCancelInMulti: true, placeholder: 'Select here', search: true, searchText: 'Enter here.' });
         $scope.countries.forEach(function (item, i) {
           $('#countries')[0].sumo.add(item.value,item.text);
           if (i < 6)
             $('#countries')[0].sumo.selectItem(item.value);
         });
         $scope.init = false;
-
+        filterData();
+        draw();
       });
     }
 
@@ -75,16 +75,8 @@ angular.module('globalDietApp')
     function draw() {
       $('#charts').html('');
       $('#charts_header').html('');
-      /*var graphic = D3Graphics.Flowing;
-      graphic.configuration.container = '#charts';
-      graphic.configuration.container_header = '#charts_header';
-      graphic.configuration.container_year = '#yearvalue';
-      graphic.controls.speed = 750;
-      graphic.data.source = $scope.selectedData;
-      graphic.render();*/
-      var graphic = new Flowing();
-      graphic.data.source = $scope.selectedData;
-      graphic.render();
+      $scope.graphic.data.source = $scope.selectedData;
+      $scope.graphic.render();
     }
 
     updateData();
