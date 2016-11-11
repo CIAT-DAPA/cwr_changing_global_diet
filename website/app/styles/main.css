@@ -95,30 +95,6 @@ text.descrip tspan {
   fill: steelblue;
 }
 
-.meat .area {
-  fill: #ec3a64;
-}
-
-.veg .area {
-  fill: #8DC63F;
-}
-
-.fruit .area {
-  fill: #ff0f9d;
-}
-
-.grain .area {
-  fill: #F68D3D;
-}
-
-.dairy .area {
-  fill: #009EFF;
-}
-
-.fat .area {
-  fill: #FFCD31;
-}
-
 .overlay {
   fill: none;
   pointer-events: all;

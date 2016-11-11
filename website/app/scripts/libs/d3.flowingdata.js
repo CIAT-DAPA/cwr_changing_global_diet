@@ -4,12 +4,12 @@ function Flowing() {
         container: '#charts',
         container_header: '#charts_header',
         container_year: '#yearvalue',
-        max_columns: 6,
         canvas: { width: 1000, height: 0, margin: { top: 10, right: 10, bottom: 10, left: 10 } },
         items: { width: 180, height: 90, margin: { top: 5, right: 5, bottom: 5, left: 5 }, width_full: 180, height_full: 100 },
         scale_factor: .8,
         rows: 6,
-        columns: 6
+        columns: 6,
+        minimum:10
     };
 
     /** Data vars */
@@ -98,6 +98,10 @@ Flowing.prototype.compile = function () {
         };
     });
 
+    this.data.items = this.data.items.filter(function(item){
+        return  d3.max(item.values, function(d){ return d.value}) >= that.configuration.minimum;
+    }); 
+
     // Select start year
     this.data.start_year = parseInt(d3.min(this.data.source, function (d) { return d['year']; }));
     this.data.end_year = parseInt(d3.max(this.data.source, function (d) { return d['year']; }));
@@ -124,14 +128,14 @@ Flowing.prototype.init = function () {
     var div = document.getElementById(this.configuration.container.replace('#', ''));
     this.configuration.canvas.width = div.clientWidth * .99;
     // Set the items size
-    this.configuration.items.width_full = this.configuration.canvas.width / this.configuration.max_columns;
+    var keys = Object.keys(this.data.groups);
+    this.configuration.columns = keys.length;
+    this.configuration.items.width_full = this.configuration.canvas.width / this.configuration.columns;
     var items_margin_right = this.configuration.items.margin.right;
     var items_margin_left = this.configuration.items.margin.left;
     this.configuration.items.width = this.configuration.items.width_full - items_margin_right - items_margin_left;
 
     // Set the interpolation values    
-    var keys = Object.keys(this.data.groups);
-    this.configuration.columns = keys.length;
     var max = this.configuration.canvas.width - this.configuration.items.width_full - (items_margin_right + items_margin_left);
     this.interpolation.x0 = d3.scale.ordinal().rangeRoundPoints([0, max]).domain(keys);
     var height_max = (this.configuration.items.height_full * keys.length) * 1.8;
@@ -172,6 +176,7 @@ Flowing.prototype.init = function () {
 Flowing.prototype.render = function () {
     var that = this;
 
+    // Clear before executions
     this.dispose();
 
     // Compile data
@@ -255,8 +260,12 @@ Flowing.prototype.render = function () {
             var num_left = that.configuration.columns - partial_domain.length;
 
             var full_domain = num_left > 0 ? partial_domain.concat(d3.range(num_left)) : partial_domain;
-
+            
             var y1 = that.interpolation.y0.domain(full_domain).copy();
+
+            
+            var height_max = (that.configuration.items.height_full * full_domain.length) * 1.8;
+            y1.rangeRoundPoints([0, height_max]);
 
             d3.select(that.configuration.container).selectAll("svg." + grp)
                 .sort(function (a, b) { return y1(a.field) - y1(b.field); });
@@ -266,7 +275,7 @@ Flowing.prototype.render = function () {
 
             transition.selectAll("svg." + grp)
                 .delay(delay)
-                .style("top", function (d) { return y1(d.field) + "px"; });
+                .style("top", function (d) {  return y1(d.field) + "px"; });
 
         });
     }
