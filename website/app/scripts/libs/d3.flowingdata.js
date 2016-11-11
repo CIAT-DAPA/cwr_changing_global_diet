@@ -9,7 +9,7 @@ function Flowing() {
         scale_factor: .8,
         rows: 6,
         columns: 6,
-        minimum:10
+        minimum:0
     };
 
     /** Data vars */
@@ -138,7 +138,7 @@ Flowing.prototype.init = function () {
     // Set the interpolation values    
     var max = this.configuration.canvas.width - this.configuration.items.width_full - (items_margin_right + items_margin_left);
     this.interpolation.x0 = d3.scale.ordinal().rangeRoundPoints([0, max]).domain(keys);
-    var height_max = (this.configuration.items.height_full * keys.length) * 1.8;
+    var height_max = (this.configuration.items.height_full * keys.length);
     this.interpolation.y0 = d3.scale.ordinal().domain(d3.range(keys.length)).rangeRoundPoints([0, height_max]);
     this.interpolation.x = d3.scale.linear().range([0, this.configuration.items.width]);
     this.interpolation.y = d3.scale.linear().range([this.configuration.items.height, 0]);
@@ -257,14 +257,14 @@ Flowing.prototype.render = function () {
                 .sort(function (a, b) { return d3.descending(a.values[year_index].value, b.values[year_index].value); })
                 .map(function (d, i) { return d.field; });
 
-            var num_left = that.configuration.columns - partial_domain.length;
+            var num_left = that.configuration.rows - partial_domain.length;
 
             var full_domain = num_left > 0 ? partial_domain.concat(d3.range(num_left)) : partial_domain;
             
             var y1 = that.interpolation.y0.domain(full_domain).copy();
-
+            //var y1 = that.interpolation.y0.domain(partial_domain).copy();
             
-            var height_max = (that.configuration.items.height_full * full_domain.length) * 1.8;
+            var height_max = (that.configuration.items.height_full * full_domain.length) ;
             y1.rangeRoundPoints([0, height_max]);
 
             d3.select(that.configuration.container).selectAll("svg." + grp)
@@ -275,7 +275,7 @@ Flowing.prototype.render = function () {
 
             transition.selectAll("svg." + grp)
                 .delay(delay)
-                .style("top", function (d) {  return y1(d.field) + "px"; });
+                .style("top", function (d) {  return y1(d.field) ; });
 
         });
     }
@@ -392,7 +392,6 @@ Flowing.prototype.render = function () {
             }
         }
     });
-
-    this.tools.resort();
+    
     this.tools.timer();
 }
