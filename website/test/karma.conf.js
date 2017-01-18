@@ -25,10 +25,7 @@ module.exports = function(config) {
       'bower_components/bootstrap/dist/js/bootstrap.js',
       'bower_components/d3/d3.js',
       'bower_components/d3.slider/d3.slider.js',
-      'bower_components/angular-scrollie/dist/angular-scrollie.js',
-      'bower_components/angular-snapscroll/dist/angular-snapscroll.js',
-      'bower_components/angular-wheelie/dist/angular-wheelie.js',
-      'bower_components/angular-swipe/dist/angular-swipe.js',
+      'bower_components/sumoselect/jquery.sumoselect.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',
