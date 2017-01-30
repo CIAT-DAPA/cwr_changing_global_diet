@@ -8,7 +8,4 @@
  *
  * Main module of the application.
  */
-angular.module('globalDietApp', [
-        'swipe',
-        'snapscroll'
-      ]);
+angular.module('globalDietApp', []);
