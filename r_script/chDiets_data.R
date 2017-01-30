@@ -159,11 +159,11 @@ lapply(1:length(measures), function(i){
 all_data3 <- all_data2
 
 # change group name
-all_data3$food_group <- tolower(gsub(pattern = ' ', replacement = '_', x = all_data3$food_group))
+all_data3$food_group <- tolower(gsub(pattern = ' ', replacement = '-', x = all_data3$food_group))
 all_data3$Item <- gsub(pattern = '* \\((.*?)\\)', replacement = '', x = all_data3$Item)
-all_data3$Item <- tolower(gsub(pattern = ' ', replacement = '-', x = all_data3$Item))
+all_data3$Item <- tolower(gsub(pattern = ' ', replacement = '_', x = all_data3$Item))
 all_data3$Item <- tolower(gsub(pattern = ',', replacement = '', x = all_data3$Item))
-all_data3$Item <- gsub(pattern = '\\-$', replacement = '', x = all_data3$Item)
+all_data3$Item <- gsub(pattern = '\\_$', replacement = '', x = all_data3$Item)
 all_data3$Item <- gsub(pattern = '\\&', replacement = 'and', x = all_data3$Item)
 all_data3$Country <- as.character(all_data3$Country)
 all_data3$Country[grep(pattern = "Côte d'Ivoire", x = all_data3$Country, fixed = TRUE)] <- 'Ivory Coast'
@@ -173,9 +173,34 @@ all_data3$Country <- gsub(pattern = ' ', replacement = '_', x = all_data3$Countr
 
 # create data sources for each country
 countries <- all_data3$Country %>% unique %>% as.character %>% sort
-lapply(1:length(countries), function(j){
+elements  <- all_data3$Element %>% unique %>% as.character %>% sort
+nicerNms <- c('fat', 'calories', 'food_quantity', 'protein')
+
+write.csv(data.frame(Country = countries), file = paste(getwd(), "/_data_sources/country_food_group_crop/countryList.csv", sep = ""), row.names = FALSE)
+
+lapply(1:length(elements), function(i){
   
-  countryData <- all_data3
+  elementData <- all_data3 %>% dplyr::filter(Element == elements[i])
+  element_dir <- paste(getwd(), "/_data_sources/country_food_group_crop/", nicerNms[i], sep = "")
+  if(!dir.exists(element_dir)){dir.create(path = element_dir, showWarnings = FALSE, recursive = TRUE)}
+  
+  lapply(1:length(countries), function(j){
+    
+    countryData <- elementData %>% dplyr::filter(Country == countries[j])
+    countryData$Value <- round(countryData$Value, 1)
+    countryData$combination <- paste(countryData$food_group, "_", countryData$Item, sep = "")
+    
+    countryData <- countryData[c("Year", "Value", "combination")]
+    countryData <- countryData %>% spread(key = combination, value = Value)
+    colnames(countryData)[1] <- "year"
+    countryData <- as.data.frame(countryData)
+    colnames(countryData)[ncol(countryData)] <- paste(colnames(countryData)[ncol(countryData)], ",", sep = "")
+    countryData[,ncol(countryData)] <- paste(countryData[,ncol(countryData)], ",", sep = "")
+    
+    # write.delim(subData, paste(nicerNms[i], '.tsv', sep = ''))
+    write.csv(countryData, file = paste(element_dir, "/", countries[j], ".csv", sep = ""), row.names = FALSE, sep = "|")
+    
+  })
   
 })
 
