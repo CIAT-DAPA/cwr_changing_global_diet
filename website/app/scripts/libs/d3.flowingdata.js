@@ -60,6 +60,18 @@ function Flowing() {
     }
 }
 
+Flowing.prototype.setHeader = function (value) {
+    this.configuration.container_header = value;
+}
+
+Flowing.prototype.setContainer = function (value) {
+    this.configuration.container = value;
+}
+
+Flowing.prototype.setContainerYear = function (value) {
+    this.configuration.container_year = value;
+}
+
 Flowing.prototype.dispose = function () {
     if(this.controls.id!=null)
         clearTimeout(this.controls.id);

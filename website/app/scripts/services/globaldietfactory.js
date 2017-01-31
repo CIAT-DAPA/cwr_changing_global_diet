@@ -9,18 +9,16 @@
  */
 angular.module('globalDietApp')
   .factory('CSV2Json', function () {
-    // Service logic
-    // ...
 
     var dataFactory = {};
 
     dataFactory.parse = function (csv) {
       var lines = csv.split("\n");
       var result = [];
-      var headers = lines[0].split(",");
+      var headers = lines[0].replaceAll('\r','').split(",");
       for (var i = 1; i < lines.length; i++) {
         var obj = {};
-        var currentline = lines[i].split(",");
+        var currentline = lines[i].replaceAll('\r','').split(",");
         for (var j = 0; j < headers.length; j++) {
           obj[headers[j]] = currentline[j];
         }
@@ -45,6 +43,14 @@ angular.module('globalDietApp')
     /** Get data for the graphic flowing data */
     dataFactory.list = function (source, measure) {
       var items = $http.get(getDataSource(source, measure)).then(function (response) {
+        return CSV2Json.parse(response.data);
+      });
+      return items;
+    }
+
+    /** Get data for the graphic by every country */
+    dataFactory.listByCountry = function (measure, country) {
+      var items = $http.get('data/country/' + measure.replaceAll('.csv','') + '/' + country + '.csv' ).then(function (response) {
         return CSV2Json.parse(response.data);
       });
       return items;
@@ -83,4 +89,27 @@ angular.module('globalDietApp')
     }
 
     return dataFactory;
+  })
+  .factory('CountryFactory', function ($http, CSV2Json) {
+    var dataFactory = {};
+
+    
+    /** Get countries exploration list */
+    dataFactory.list = function () {
+      var items = $http.get('data/country/countries.csv').then(function (response) {
+        return CSV2Json.parse(response.data);
+      });
+      return items;
+    }
+
+    return dataFactory;
   });
+
+String.prototype.startsWith = function (str) {
+  return !this.indexOf(str);
+}
+
+String.prototype.replaceAll = function (search, replacement) {
+  var target = this;
+  return target.replace(new RegExp(search, 'g'), replacement);
+};
