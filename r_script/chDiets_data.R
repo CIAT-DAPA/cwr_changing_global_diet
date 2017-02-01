@@ -198,7 +198,7 @@ lapply(1:length(elements), function(i){
     # countryData[,ncol(countryData)] <- paste(countryData[,ncol(countryData)], ",", sep = "")
     
     # write.delim(subData, paste(nicerNms[i], '.tsv', sep = ''))
-    write.csv(countryData, file = paste(element_dir, "/", countries[j], ".csv", sep = ""), row.names = FALSE, sep = "|")
+    write.csv(countryData, file = paste(element_dir, "/", countries[j], ".csv", sep = ""), row.names = FALSE, sep = "|", quote = FALSE)
     
   })
   
