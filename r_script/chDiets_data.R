@@ -194,8 +194,8 @@ lapply(1:length(elements), function(i){
     countryData <- countryData %>% spread(key = combination, value = Value)
     colnames(countryData)[1] <- "year"
     countryData <- as.data.frame(countryData)
-    colnames(countryData)[ncol(countryData)] <- paste(colnames(countryData)[ncol(countryData)], ",", sep = "")
-    countryData[,ncol(countryData)] <- paste(countryData[,ncol(countryData)], ",", sep = "")
+    # colnames(countryData)[ncol(countryData)] <- paste(colnames(countryData)[ncol(countryData)], ",", sep = "")
+    # countryData[,ncol(countryData)] <- paste(countryData[,ncol(countryData)], ",", sep = "")
     
     # write.delim(subData, paste(nicerNms[i], '.tsv', sep = ''))
     write.csv(countryData, file = paste(element_dir, "/", countries[j], ".csv", sep = ""), row.names = FALSE, sep = "|")
