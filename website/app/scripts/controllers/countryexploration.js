@@ -30,21 +30,18 @@ angular.module('globalDietApp')
     }
 
     function filterData() {
-      console.log($scope.data);
       $scope.selectedData = $scope.data.map(function (obj) {
         var row = {};
         var keys = Object.keys(obj);
         row["year"] = obj.year;
 
         keys.forEach(function (d) {
-          if (d.startsWith("_"))
-            row[d] = obj[d];
+          if (d !== 'year')
+            row[d] = parseFloat(obj[d]);
         });
-
+        
         return row;
       });
-
-      console.log($scope.selectedData);
     }
 
     function draw() {

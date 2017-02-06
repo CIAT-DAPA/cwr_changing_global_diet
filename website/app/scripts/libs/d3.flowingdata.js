@@ -226,9 +226,10 @@ Flowing.prototype.render = function () {
         .attr("width", this.configuration.items.width)
         .attr("height", this.configuration.items.height);
 
-    svg.append("path")
+   svg.append("path")
         .attr("class", "area")
         .style("fill", function (d) { return that.interpolation.color_subgroup(d.subgroup); })
+
         .attr("d", function (d) {
             that.interpolation.y.domain([0, that.data.groups[d.group].max]);
             return that.tools.area(d.values);
@@ -261,10 +262,9 @@ Flowing.prototype.render = function () {
     // Reording 
     this.tools.resort = function () {
 
-        var year_index = that.controls.current_year - that.data.start_year;
-
+        var year_index = that.controls.current_year - that.data.start_year;        
         Object.keys(that.data.groups).forEach(function (grp, i) {
-
+            
             var partial_domain = that.data.items.filter(function (d) { return d.group == grp; })
                 .sort(function (a, b) { return d3.descending(a.values[year_index].value, b.values[year_index].value); })
                 .map(function (d, i) { return d.field; });

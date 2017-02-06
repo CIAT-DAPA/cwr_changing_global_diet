@@ -20,13 +20,13 @@ html, body
   display: block; 
 }
 
-#charts {  
+#charts, #charts_home, #charts_country {  
   width: 100%;
   display: block;
   position: relative;
 }
 
-#charts_header {
+#charts_header, #charts_header_home, #charts_header_country  {
   width: 100%;
   display: block;
   position: relative;
