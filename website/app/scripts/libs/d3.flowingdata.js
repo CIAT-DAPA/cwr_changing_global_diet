@@ -9,7 +9,8 @@ function Flowing() {
         scale_factor: .8,
         rows: 6,
         columns: 6,
-        minimum:0
+        minimum:0,
+        color_group : false
     };
 
     /** Data vars */
@@ -72,6 +73,10 @@ Flowing.prototype.setContainerYear = function (value) {
     this.configuration.container_year = value;
 }
 
+Flowing.prototype.setColorByGroup = function (value) {
+    this.configuration.color_group = value;
+}
+
 Flowing.prototype.dispose = function () {
     if(this.controls.id!=null)
         clearTimeout(this.controls.id);
@@ -132,6 +137,7 @@ Flowing.prototype.compile = function () {
             that.data.groups[f.group].max = f.max;
         }
     });
+    
 }
 /** Initialize all components for the graphic */
 Flowing.prototype.init = function () {  
@@ -159,10 +165,10 @@ Flowing.prototype.init = function () {
         d3.min(this.data.items, function (s) { return s.values[0].year; }),
         d3.max(this.data.items, function (s) { return s.values[s.values.length - 1].year; })
     ]);
-    this.interpolation.color = d3.scale.ordinal().domain(keys)
-        .range(["#ec3c3c", "#77ec3c", "#3cece9", "#3c3cec", "#c63cec", "#ec3c82"]);
-    //this.interpolation.color_subgroup = d3.scale.category20().domain(this.data.subgroup);
     var colors = 'A8D1D7 F3928E CC97AD CBB7AE 89A5C6 F9E061 D2CC6E 979797 FFC265 BEC7C2 7EC1A6'.split(' ').map(function (c) { return '#' + c; });
+
+    this.interpolation.color = d3.scale.ordinal().domain(keys).range(colors);
+    //this.interpolation.color_subgroup = d3.scale.category20().domain(this.data.subgroup);    
     this.interpolation.color_subgroup = d3.scale.ordinal().domain(this.data.subgroup).range(colors);
 
     // Init the tools 
@@ -228,7 +234,7 @@ Flowing.prototype.render = function () {
 
    svg.append("path")
         .attr("class", "area")
-        .style("fill", function (d) { return that.interpolation.color_subgroup(d.subgroup); })
+        .style("fill", function (d) { return that.configuration.color_group ? that.interpolation.color(d.subgroup) : that.interpolation.color_subgroup(d.subgroup); })
 
         .attr("d", function (d) {
             that.interpolation.y.domain([0, that.data.groups[d.group].max]);
@@ -245,7 +251,7 @@ Flowing.prototype.render = function () {
         .attr("class", "item_title")
         .attr("dy", "1.1em")
         .attr("dx", "0.4em")
-        .text(function (d) { return d.field.charAt(0).toUpperCase() + d.field.slice(1); });
+        .text(function (d) { return d.field.charAt(0).toUpperCase() + d.field.slice(1).replaceAll('-',' '); });
 
     // Focusing on mouseovers
     this.controls.focus = svg.append("g")
@@ -358,7 +364,6 @@ Flowing.prototype.render = function () {
                 .attr("cy", function (d) {
                     index = that.tools.bisectYear(d.values, xmove, 1);
                     d3.select(that.configuration.container_year).text(that.data.start_year + index);
-                    //this.interpolation.y.domain([0, d.max * this.configuration.scale_factor]);
                     that.interpolation.y.domain([0, that.data.groups[d.group].max]);
                     return that.interpolation.y(d.values[index].value * that.configuration.scale_factor);
                 });

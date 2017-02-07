@@ -13,6 +13,7 @@ angular.module('globalDietApp')
     $scope.graphic = new Flowing();
     $scope.graphic.setHeader('#charts_header_country');
     $scope.graphic.setContainer('#charts_country');
+    $scope.graphic.setColorByGroup(true);
 
     // List the countries available
     $scope.countries_list = [];
