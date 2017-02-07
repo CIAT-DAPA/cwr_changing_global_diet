@@ -70,7 +70,7 @@ lapply(1:length(measures), function(i){
   subData[,ncol(subData)] <- paste(subData[,ncol(subData)], ',', sep='')
   
   # write.delim(subData, paste(nicerNms[i], '.tsv', sep = ''))
-  write.csv(subData, file = paste('./_data_sources/', nicerNms[i], '.csv', sep = ''), row.names = FALSE, sep = "|")
+  write.csv(subData, file = paste('./_data_sources/global/global2/', nicerNms[i], '.csv', sep = ''), row.names = FALSE, quote = FALSE, sep = "|")
   
 })
 
@@ -143,11 +143,11 @@ lapply(1:length(measures), function(i){
   subData <- subData %>% spread(key = combination, value = Value)
   colnames(subData)[1] <- 'year'
   subData <- as.data.frame(subData)
-  colnames(subData)[ncol(subData)] <- paste(colnames(subData)[ncol(subData)], ',', sep = '')
-  subData[,ncol(subData)] <- paste(subData[,ncol(subData)], ',', sep='')
+  # colnames(subData)[ncol(subData)] <- paste(colnames(subData)[ncol(subData)], ',', sep = '')
+  # subData[,ncol(subData)] <- paste(subData[,ncol(subData)], ',', sep='')
   
   # write.delim(subData, paste(nicerNms[i], '.tsv', sep = ''))
-  write.csv(subData, file = paste('./_data_sources/global/', nicerNms[i], '.csv', sep = ''), row.names = FALSE, sep = "|")
+  write.csv(subData, file = paste('./_data_sources/global/', nicerNms[i], '.csv', sep = ''), row.names = FALSE, quote = FALSE, sep = "|")
   
 })
 
@@ -170,6 +170,7 @@ all_data3$Country[grep(pattern = "Côte d'Ivoire", x = all_data3$Country, fixed =
 all_data3$Country <- tolower(all_data3$Country)
 all_data3$Country <- gsub(pattern = '* \\((.*?)\\)', replacement = '', x = all_data3$Country)
 all_data3$Country <- gsub(pattern = ' ', replacement = '_', x = all_data3$Country)
+all_data3$Country <- gsub(pattern = "\\'", replacement = '', x = all_data3$Country)
 
 # create data sources for each country
 countries <- all_data3$Country %>% unique %>% as.character %>% sort
@@ -204,27 +205,26 @@ lapply(1:length(elements), function(i){
   
 })
 
-# create data sources for each metric
-measures <- all_data3$Element %>% unique %>% as.character
-nicerNms <- c('fat', 'calories', 'food_quantity', 'protein')
-lapply(1:length(measures), function(i){
-  
-  subData <- all_data3 %>% dplyr::filter(Element == measures[i])
-  subData$Value <- round(subData$Value, 1)
-  subData$combination <- paste(subData$food_group, '_', subData$Item, sep = '')
-  
-  subData <- subData[c('Year', 'Value', 'combination')]
-  subData <- subData %>% spread(key = combination, value = Value)
-  colnames(subData)[1] <- 'year'
-  subData <- as.data.frame(subData)
-  colnames(subData)[ncol(subData)] <- paste(colnames(subData)[ncol(subData)], ',', sep = '')
-  subData[,ncol(subData)] <- paste(subData[,ncol(subData)], ',', sep='')
-  
-  # write.delim(subData, paste(nicerNms[i], '.tsv', sep = ''))
-  write.csv(subData, file = paste('./_data_sources/global/', nicerNms[i], '.csv', sep = ''), row.names = FALSE, sep = "|")
-  
-})
-
+# # create data sources for each metric
+# measures <- all_data3$Element %>% unique %>% as.character
+# nicerNms <- c('fat', 'calories', 'food_quantity', 'protein')
+# lapply(1:length(measures), function(i){
+#   
+#   subData <- all_data3 %>% dplyr::filter(Element == measures[i])
+#   subData$Value <- round(subData$Value, 1)
+#   subData$combination <- paste(subData$food_group, '_', subData$Item, sep = '')
+#   
+#   subData <- subData[c('Year', 'Value', 'combination')]
+#   subData <- subData %>% spread(key = combination, value = Value)
+#   colnames(subData)[1] <- 'year'
+#   subData <- as.data.frame(subData)
+#   # colnames(subData)[ncol(subData)] <- paste(colnames(subData)[ncol(subData)], ',', sep = '')
+#   # subData[,ncol(subData)] <- paste(subData[,ncol(subData)], ',', sep='')
+#   
+#   # write.delim(subData, paste(nicerNms[i], '.tsv', sep = ''))
+#   write.csv(subData, file = paste('./_data_sources/global/global2/', nicerNms[i], '.csv', sep = ''), row.names = FALSE, quote = FALSE, sep = "|")
+#   
+# })
 
 
 # -> functional programming
