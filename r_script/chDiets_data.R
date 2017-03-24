@@ -33,6 +33,44 @@ rm(all_data, gFood)
 # reshape dataset
 all_data2 <- all_data2 %>% tidyr::gather(Year, Value, Y1961:Y2009)
 all_data2$Year <- as.numeric(gsub(pattern='Y', replacement='', x=all_data2$Year))
+all_data2$food_group <- as.character(all_data2$food_group)
+
+# updates on food_group column
+all_data2$food_group <- gsub(pattern = "Cereals", replacement = "Grains", x = all_data2$food_group, fixed = T)
+all_data2$food_group <- gsub(pattern = "Oilcrops", replacement = "Oils", x = all_data2$food_group, fixed = T)
+all_data2$food_group <- gsub(pattern = "Sugarcrops", replacement = "Sweeteners", x = all_data2$food_group, fixed = T)
+all_data2$food_group <- gsub(pattern = "^Spices$", replacement = "Spices and stimulants", x = all_data2$food_group)
+all_data2$food_group <- gsub(pattern = "^Stimulants$", replacement = "Spices and stimulants", x = all_data2$food_group)
+
+# updates on country names
+all_data2$Country <- as.character(all_data2$Country)
+all_data2$Country <- gsub(pattern = "Antigua and Barbuda", replacement = "Antigua and Barb.", x = all_data2$Country, fixed = T)
+all_data2$Country <- gsub(pattern = "Belgium-Luxembourg", replacement = "Belgium and Lux.", x = all_data2$Country, fixed = T)
+all_data2$Country <- gsub(pattern = "Bolivia \\(Plurinational State of\\)", replacement = "Bolivia", x = all_data2$Country)
+all_data2$Country <- gsub(pattern = "Brunei Darussalam", replacement = "Brunei Dar.", x = all_data2$Country, fixed = T)
+all_data2$Country <- gsub(pattern = "Central African Republic", replacement = "Cent. African Rep.", x = all_data2$Country, fixed = T)
+all_data2$Country <- gsub(pattern = "Central African Republic", replacement = "Cent. African Rep.", x = all_data2$Country, fixed = T)
+# all_data2$Country[grep(pattern = "C?te d'Ivoire", x = all_data2$Country, fixed = TRUE)] <- 'Ivory Coast' # Windows
+all_data2$Country[grep(pattern = "C\364te d'Ivoire", x = all_data2$Country, fixed = TRUE)] <- 'Ivory Coast' # MB
+all_data2$Country <- gsub(pattern = "Democratic People's Republic of Korea", replacement = "North Korea", x = all_data2$Country, fixed = T)
+all_data2$Country <- gsub(pattern = "Dominican Republic", replacement = "Dominican Rep.", x = all_data2$Country, fixed = T)
+all_data2$Country <- gsub(pattern = "Ethiopia PDR", replacement = "Ethiopia", x = all_data2$Country, fixed = T)
+all_data2$Country <- gsub(pattern = "Iran \\(Islamic Republic of\\)", replacement = "Iran", x = all_data2$Country)
+all_data2$Country <- gsub(pattern = "Lao People's Democratic Republic", replacement = "Laos", x = all_data2$Country, fixed = T)
+all_data2$Country <- gsub(pattern = "Republic of Korea", replacement = "Rep. of Korea", x = all_data2$Country, fixed = T)
+all_data2$Country <- gsub(pattern = "Saint Kitts and Nevis", replacement = "St. Kitts", x = all_data2$Country, fixed = T)
+all_data2$Country <- gsub(pattern = "Saint Vincent and the Grenadines", replacement = "St. Vincent", x = all_data2$Country, fixed = T)
+all_data2$Country <- gsub(pattern = "Sao Tome and Principe", replacement = "Sao Tome", x = all_data2$Country, fixed = T)
+all_data2$Country <- gsub(pattern = "Solomon Islands", replacement = "Solomon Isl.", x = all_data2$Country, fixed = T)
+all_data2$Country <- gsub(pattern = "Sudan \\(former\\)", replacement = "Sudan", x = all_data2$Country)
+all_data2$Country <- gsub(pattern = "Syrian Arab Republic", replacement = "Syria", x = all_data2$Country, fixed = T)
+all_data2$Country <- gsub(pattern = "United Arab Emirates", replacement = "United Arab Em.", x = all_data2$Country, fixed = T)
+all_data2$Country <- gsub(pattern = "United Republic of Tanzania", replacement = "Tanzania", x = all_data2$Country, fixed = T)
+all_data2$Country <- gsub(pattern = "United States of America", replacement = "USA", x = all_data2$Country, fixed = T)
+all_data2$Country <- gsub(pattern = "Venezuela \\(Bolivarian Republic of\\)", replacement = "Venezuela", x = all_data2$Country)
+all_data2$Country <- gsub(pattern = "Yugoslav SFR", replacement = "Yugoslavia", x = all_data2$Country, fixed = T)
+all_data2$Country <- gsub(pattern = "Yugoslav SFR", replacement = "Yugoslavia", x = all_data2$Country, fixed = T)
+# grep(pattern = "Yugoslav SFR", x = all_data2$Country, value = T)
 
 # create data sources
 all_data3 <- all_data2 %>% group_by(Country, Element, Unit, food_group, Year) %>% summarise(sum(Value))
@@ -41,7 +79,6 @@ names(all_data3)[ncol(all_data3)] <- 'Value'
 # change group name
 all_data3$food_group <- tolower(gsub(pattern = ' ', replacement = '_', x = all_data3$food_group))
 all_data3$Country <- as.character(all_data3$Country)
-all_data3$Country[grep(pattern = "Côte d'Ivoire", x = all_data3$Country, fixed = TRUE)] <- 'Ivory Coast'
 
 # select only 6 countries
 # all_data3 <- all_data3 %>% filter(Country %in% c('Colombia', 'India', 'Germany', 'France', 'Argentina', 'Japan'))
@@ -52,7 +89,8 @@ all_data3$Country[grep(pattern = "Côte d'Ivoire", x = all_data3$Country, fixed =
 
 # create data sources for each metric
 measures <- all_data3$Element %>% unique %>% as.character
-nicerNms <- c('fat', 'calories', 'food_quantity', 'protein')
+measures <- c(measures[2], measures[4], measures[1], measures[3])
+nicerNms <- c('calories', 'protein', 'fat', 'food_quantity')
 lapply(1:length(measures), function(i){
   
   subData <- all_data3 %>% dplyr::filter(Element == measures[i])
@@ -88,11 +126,11 @@ all_data3$Item <- tolower(gsub(pattern = ',', replacement = '', x = all_data3$It
 all_data3$Item <- gsub(pattern = '\\_$', replacement = '', x = all_data3$Item)
 all_data3$Item <- gsub(pattern = '\\&', replacement = 'and', x = all_data3$Item)
 all_data3$Country <- as.character(all_data3$Country)
-all_data3$Country[grep(pattern = "Côte d'Ivoire", x = all_data3$Country, fixed = TRUE)] <- 'Ivory Coast'
 
 # create data sources for each metric
 measures <- all_data3$Element %>% unique %>% as.character
-nicerNms <- c('fat', 'calories', 'food_quantity', 'protein')
+measures <- c(measures[2], measures[4], measures[1], measures[3])
+nicerNms <- c('calories', 'protein', 'fat', 'food_quantity')
 lapply(1:length(measures), function(i){
   
   subData <- all_data3 %>% dplyr::filter(Element == measures[i])
@@ -132,7 +170,8 @@ all_data3$Item <- gsub(pattern = '\\&', replacement = 'and', x = all_data3$Item)
 
 # create data sources for each metric
 measures <- all_data3$Element %>% unique %>% as.character
-nicerNms <- c('fat', 'calories', 'food_quantity', 'protein')
+measures <- c(measures[2], measures[4], measures[1], measures[3])
+nicerNms <- c('calories', 'protein', 'fat', 'food_quantity')
 lapply(1:length(measures), function(i){
   
   subData <- all_data3 %>% dplyr::filter(Element == measures[i])
@@ -166,7 +205,6 @@ all_data3$Item <- tolower(gsub(pattern = ',', replacement = '', x = all_data3$It
 all_data3$Item <- gsub(pattern = '\\_$', replacement = '', x = all_data3$Item)
 all_data3$Item <- gsub(pattern = '\\&', replacement = 'and', x = all_data3$Item)
 all_data3$Country <- as.character(all_data3$Country)
-all_data3$Country[grep(pattern = "Côte d'Ivoire", x = all_data3$Country, fixed = TRUE)] <- 'Ivory Coast'
 all_data3$Country <- tolower(all_data3$Country)
 all_data3$Country <- gsub(pattern = '* \\((.*?)\\)', replacement = '', x = all_data3$Country)
 all_data3$Country <- gsub(pattern = ' ', replacement = '_', x = all_data3$Country)
@@ -174,14 +212,15 @@ all_data3$Country <- gsub(pattern = "\\'", replacement = '', x = all_data3$Count
 
 # create data sources for each country
 countries <- all_data3$Country %>% unique %>% as.character %>% sort
-elements  <- all_data3$Element %>% unique %>% as.character %>% sort
-nicerNms <- c('fat', 'calories', 'food_quantity', 'protein')
+measures  <- all_data3$Element %>% unique %>% as.character %>% sort
+measures <- c(measures[2], measures[4], measures[1], measures[3])
+nicerNms <- c('calories', 'protein', 'fat', 'food_quantity')
 
 write.csv(data.frame(Country = countries), file = paste(getwd(), "/_data_sources/country_food_group_crop/countryList.csv", sep = ""), row.names = FALSE)
 
-lapply(1:length(elements), function(i){
+lapply(1:length(measures), function(i){
   
-  elementData <- all_data3 %>% dplyr::filter(Element == elements[i])
+  elementData <- all_data3 %>% dplyr::filter(Element == measures[i])
   element_dir <- paste(getwd(), "/_data_sources/country_food_group_crop/", nicerNms[i], sep = "")
   if(!dir.exists(element_dir)){dir.create(path = element_dir, showWarnings = FALSE, recursive = TRUE)}
   
