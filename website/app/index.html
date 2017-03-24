@@ -19,8 +19,22 @@
 </head>
 
 <body ng-app="globalDietApp" ng-controller="HomeCtrl">	
-    
-	<div id="charts_header_home"></div>
+    <nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container">
+			<div id="navbar">
+				<ul class="nav navbar-nav">
+					<li><a>Calories (kcal/capita/day)</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a>Year:</a></li>
+					<li><a id="yearvalue">1961</a></li>
+				</ul>		
+			</div>
+		</div>
+	</nav>
+	<div class="clear"></div>
+	<div id="charts_header_home" style="position:fixed; z-index: 1030;"></div>
+	<div style="width: 100%; height: 20px;"></div>
     <div id="charts_home"></div>
 
 	<!-- build:js(.) scripts/vendor.js -->
@@ -38,6 +52,7 @@
 	<script src="scripts/app.js"></script>
 	<script src="scripts/services/globaldietfactory.js"></script>
 	<script src="scripts/controllers/home.js"></script>
+	<script src="scripts/controllers/countrycomparison.js"></script>
 	<script src="scripts/libs/d3.flowingdata.js"></script>
 	<!-- endbuild -->
 
