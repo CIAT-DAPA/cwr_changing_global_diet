@@ -73,18 +73,18 @@ angular.module('globalDietApp')
 
     dataFactory.getSources = function () {
       var sources=[];
-      sources.push({title:'Food weight',folder:'food_group'});
-      sources.push({title:'Crop',folder:'crop'});
-      sources.push({title:'Global',folder:'global'});
+      sources.push({title:'Food Groups',folder:'food_group'});
+      sources.push({title:'Crops',folder:'crop'});
+      //sources.push({title:'Global',folder:'global'});
       return sources;
     }
 
     dataFactory.getMeasures = function () {
       var measures=[];
       measures.push({title:'Calories (kcal/capita/day)',file:'calories.csv'});
-      measures.push({title:'Fat (g/capita/day)',file:'fat.csv'});
-      measures.push({title:'Food weight (g/capita/day)',file:'food_quantity.csv'});
       measures.push({title:'Protein (g/capita/day)',file:'protein.csv'});
+      measures.push({title:'Fat (g/capita/day)',file:'fat.csv'});
+      measures.push({title:'Food Weight (g/capita/day)',file:'food_quantity.csv'});
       return measures;
     }
 

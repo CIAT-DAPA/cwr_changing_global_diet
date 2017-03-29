@@ -9,7 +9,7 @@ html, body {
 }
 
 #yearvalue {
-  font-size: 57px;
+  font-size: 40px;
 }
 
 .clear {
@@ -130,4 +130,12 @@ text.descrip {
   font-weight: 400;
   font-size: 13px;
   line-height: 1.4em;
+}
+
+.menu_des{
+  font-size: 13px;
+}
+
+.text-bold{
+  font-weight:bold;
 }

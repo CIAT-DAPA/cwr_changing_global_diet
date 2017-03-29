@@ -20,7 +20,7 @@ angular.module('globalDietApp')
     $scope.measures = GlobalDietFactory.getMeasures();
     $scope.selectedMeasure = $scope.measures[1];
     
-    $scope.selectedCountries = ["brazil","china","india","kenya","united-states-of-america","viet-nam"];
+    $scope.selectedCountries = ["brazil","china","india","kenya","usa","vietnam"];
 
     function updateData() {
       GlobalDietFactory.list($scope.selectedSource.folder, $scope.selectedMeasure.file).then(function (data) {       

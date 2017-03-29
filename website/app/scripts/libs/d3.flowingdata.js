@@ -236,7 +236,7 @@ Flowing.prototype.render = function () {
         .attr("class", "area")
         .style("fill", function (d) { return that.configuration.color_group ? that.interpolation.color(d.subgroup) : that.interpolation.color_subgroup(d.subgroup); })
 
-        .attr("d", function (d) {
+        .attr("d", function (d) {            
             that.interpolation.y.domain([0, that.data.groups[d.group].max]);
             return that.tools.area(d.values);
         });
@@ -272,7 +272,7 @@ Flowing.prototype.render = function () {
         Object.keys(that.data.groups).forEach(function (grp, i) {
             
             var partial_domain = that.data.items.filter(function (d) { return d.group == grp; })
-                .sort(function (a, b) { return d3.descending(a.values[year_index].value, b.values[year_index].value); })
+                .sort(function (a, b) {  return d3.descending(a.values[year_index].value, b.values[year_index].value); })
                 .map(function (d, i) { return d.field; });
 
             var num_left = that.configuration.rows - partial_domain.length;
