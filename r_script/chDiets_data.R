@@ -80,6 +80,7 @@ names(all_data3)[ncol(all_data3)] <- 'Value'
 # change group name
 all_data3$food_group <- tolower(gsub(pattern = ' ', replacement = '_', x = all_data3$food_group))
 all_data3$Country <- as.character(all_data3$Country)
+all_data3$Country <- gsub(pattern = ".", replacement = "", x = all_data3$Country, fixed = T)
 
 # select only 6 countries
 # all_data3 <- all_data3 %>% filter(Country %in% c('Colombia', 'India', 'Germany', 'France', 'Argentina', 'Japan'))
@@ -127,6 +128,7 @@ all_data3$Item <- tolower(gsub(pattern = ',', replacement = '', x = all_data3$It
 all_data3$Item <- gsub(pattern = '\\_$', replacement = '', x = all_data3$Item)
 all_data3$Item <- gsub(pattern = '\\&', replacement = 'and', x = all_data3$Item)
 all_data3$Country <- as.character(all_data3$Country)
+all_data3$Country <- gsub(pattern = ".", replacement = "", x = all_data3$Country, fixed = T)
 
 # create data sources for each metric
 measures <- all_data3$Element %>% unique %>% as.character
@@ -149,7 +151,7 @@ lapply(1:length(measures), function(i){
   subData[,ncol(subData)] <- paste(subData[,ncol(subData)], ',', sep='')
   
   # write.delim(subData, paste(nicerNms[i], '.tsv', sep = ''))
-  write.csv(subData, file = paste('./_data_sources/crop/', nicerNms[i], '.csv', sep = ''), row.names = FALSE, sep = "|")
+  write.csv(subData, file = paste('./_data_sources/crop/', nicerNms[i], '.csv', sep = ''), row.names = FALSE, quote = FALSE, sep = "|")
   
 })
 
