@@ -50,8 +50,9 @@ all_data2$Country <- gsub(pattern = "Bolivia \\(Plurinational State of\\)", repl
 all_data2$Country <- gsub(pattern = "Brunei Darussalam", replacement = "Brunei Dar.", x = all_data2$Country, fixed = T)
 all_data2$Country <- gsub(pattern = "Central African Republic", replacement = "Cent. African Rep.", x = all_data2$Country, fixed = T)
 all_data2$Country <- gsub(pattern = "Central African Republic", replacement = "Cent. African Rep.", x = all_data2$Country, fixed = T)
-# all_data2$Country[grep(pattern = "C?te d'Ivoire", x = all_data2$Country, fixed = TRUE)] <- 'Ivory Coast' # Windows
-all_data2$Country[grep(pattern = "C\364te d'Ivoire", x = all_data2$Country, fixed = TRUE)] <- 'Ivory Coast' # MB
+all_data2$Country[grep(pattern = "C?te d'Ivoire", x = all_data2$Country, fixed = TRUE)] <- 'Ivory Coast' # Windows
+all_data2$Country[grep(pattern = "Côte d'Ivoire", x = all_data2$Country, fixed = TRUE)] <- 'Ivory Coast' # Windows
+# all_data2$Country[grep(pattern = "C\364te d'Ivoire", x = all_data2$Country, fixed = TRUE)] <- 'Ivory Coast' # MB
 all_data2$Country <- gsub(pattern = "Democratic People's Republic of Korea", replacement = "North Korea", x = all_data2$Country, fixed = T)
 all_data2$Country <- gsub(pattern = "Dominican Republic", replacement = "Dominican Rep.", x = all_data2$Country, fixed = T)
 all_data2$Country <- gsub(pattern = "Ethiopia PDR", replacement = "Ethiopia", x = all_data2$Country, fixed = T)
@@ -69,7 +70,7 @@ all_data2$Country <- gsub(pattern = "United Republic of Tanzania", replacement =
 all_data2$Country <- gsub(pattern = "United States of America", replacement = "USA", x = all_data2$Country, fixed = T)
 all_data2$Country <- gsub(pattern = "Venezuela \\(Bolivarian Republic of\\)", replacement = "Venezuela", x = all_data2$Country)
 all_data2$Country <- gsub(pattern = "Yugoslav SFR", replacement = "Yugoslavia", x = all_data2$Country, fixed = T)
-all_data2$Country <- gsub(pattern = "Yugoslav SFR", replacement = "Yugoslavia", x = all_data2$Country, fixed = T)
+all_data2$Country <- gsub(pattern = "Viet Nam", replacement = "Vietnam", x = all_data2$Country, fixed = T)
 # grep(pattern = "Yugoslav SFR", x = all_data2$Country, value = T)
 
 # create data sources
