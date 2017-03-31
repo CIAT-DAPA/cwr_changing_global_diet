@@ -9,7 +9,8 @@ function Flowing() {
         scale_factor: .8,
         rows: 6,
         columns: 6,
-        minimum:0
+        minimum:0,
+        color_group : false
     };
 
     /** Data vars */
@@ -58,6 +59,22 @@ function Flowing() {
         id: null,
 
     }
+}
+
+Flowing.prototype.setHeader = function (value) {
+    this.configuration.container_header = value;
+}
+
+Flowing.prototype.setContainer = function (value) {
+    this.configuration.container = value;
+}
+
+Flowing.prototype.setContainerYear = function (value) {
+    this.configuration.container_year = value;
+}
+
+Flowing.prototype.setColorByGroup = function (value) {
+    this.configuration.color_group = value;
 }
 
 Flowing.prototype.dispose = function () {
@@ -120,6 +137,7 @@ Flowing.prototype.compile = function () {
             that.data.groups[f.group].max = f.max;
         }
     });
+    
 }
 /** Initialize all components for the graphic */
 Flowing.prototype.init = function () {  
@@ -147,10 +165,10 @@ Flowing.prototype.init = function () {
         d3.min(this.data.items, function (s) { return s.values[0].year; }),
         d3.max(this.data.items, function (s) { return s.values[s.values.length - 1].year; })
     ]);
-    this.interpolation.color = d3.scale.ordinal().domain(keys)
-        .range(["#ec3c3c", "#77ec3c", "#3cece9", "#3c3cec", "#c63cec", "#ec3c82"]);
-    //this.interpolation.color_subgroup = d3.scale.category20().domain(this.data.subgroup);
     var colors = 'A8D1D7 F3928E CC97AD CBB7AE 89A5C6 F9E061 D2CC6E 979797 FFC265 BEC7C2 7EC1A6'.split(' ').map(function (c) { return '#' + c; });
+
+    this.interpolation.color = d3.scale.ordinal().domain(keys).range(colors);
+    //this.interpolation.color_subgroup = d3.scale.category20().domain(this.data.subgroup);    
     this.interpolation.color_subgroup = d3.scale.ordinal().domain(this.data.subgroup).range(colors);
 
     // Init the tools 
@@ -185,6 +203,11 @@ Flowing.prototype.render = function () {
     // Init configurations and Controls
     this.init();
 
+    function toTitleCase(str)
+    {
+        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    }
+
     // Start chart for each item
     var svg_header = d3.select(this.configuration.container_header).selectAll("svg")
         .data(Object.keys(this.data.groups))
@@ -195,7 +218,13 @@ Flowing.prototype.render = function () {
         .append("text")
         .attr("dy", "1.1em")
         .attr("dx", "0.4em")
-        .text(function (d) { var title = d.charAt(0).toUpperCase() + d.slice(1); return title.replaceAll('-', ' '); })
+        .text(function (d) { 
+            var title = toTitleCase(d.replaceAll('-', ' ')); 
+            title = title.replace(' And ', ' and ').replace(' Of ',' of ');
+            title = title.length > 3 ? title : title.toUpperCase();
+            title = title.toUpperCase() === 'USSR' ? 'USSR' : title;
+            return title.replaceAll('-', ' '); 
+        })
         .attr("transform", "translate(" + that.configuration.items.margin.left + "," + that.configuration.items.margin.top + ")");
 
     var svg = d3.select(this.configuration.container).selectAll("svg")
@@ -214,10 +243,11 @@ Flowing.prototype.render = function () {
         .attr("width", this.configuration.items.width)
         .attr("height", this.configuration.items.height);
 
-    svg.append("path")
+   svg.append("path")
         .attr("class", "area")
-        .style("fill", function (d) { return that.interpolation.color_subgroup(d.subgroup); })
-        .attr("d", function (d) {
+        .style("fill", function (d) { return that.configuration.color_group ? that.interpolation.color(d.subgroup) : that.interpolation.color_subgroup(d.subgroup); })
+
+        .attr("d", function (d) {            
             that.interpolation.y.domain([0, that.data.groups[d.group].max]);
             return that.tools.area(d.values);
         });
@@ -232,7 +262,7 @@ Flowing.prototype.render = function () {
         .attr("class", "item_title")
         .attr("dy", "1.1em")
         .attr("dx", "0.4em")
-        .text(function (d) { return d.field.charAt(0).toUpperCase() + d.field.slice(1); });
+        .text(function (d) { return d.field.charAt(0).toUpperCase() + d.field.slice(1).replaceAll('-',' '); });
 
     // Focusing on mouseovers
     this.controls.focus = svg.append("g")
@@ -249,12 +279,11 @@ Flowing.prototype.render = function () {
     // Reording 
     this.tools.resort = function () {
 
-        var year_index = that.controls.current_year - that.data.start_year;
-
+        var year_index = that.controls.current_year - that.data.start_year;        
         Object.keys(that.data.groups).forEach(function (grp, i) {
-
+            
             var partial_domain = that.data.items.filter(function (d) { return d.group == grp; })
-                .sort(function (a, b) { return d3.descending(a.values[year_index].value, b.values[year_index].value); })
+                .sort(function (a, b) {  return d3.descending(a.values[year_index].value, b.values[year_index].value); })
                 .map(function (d, i) { return d.field; });
 
             var num_left = that.configuration.rows - partial_domain.length;
@@ -346,7 +375,6 @@ Flowing.prototype.render = function () {
                 .attr("cy", function (d) {
                     index = that.tools.bisectYear(d.values, xmove, 1);
                     d3.select(that.configuration.container_year).text(that.data.start_year + index);
-                    //this.interpolation.y.domain([0, d.max * this.configuration.scale_factor]);
                     that.interpolation.y.domain([0, that.data.groups[d.group].max]);
                     return that.interpolation.y(d.values[index].value * that.configuration.scale_factor);
                 });
