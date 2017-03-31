@@ -11,7 +11,8 @@ angular.module('globalDietApp')
   .controller('CountryComparisonCtrl', function ($scope, GlobalDietFactory) {
     $scope.init = true;
     $scope.graphic = new Flowing();
-    $("#countries").SumoSelect({ okCancelInMulti: true, placeholder: 'Select here', search: true, searchText: 'Enter here.' });
+    $("#countries").SumoSelect({ okCancelInMulti: true, placeholder: 'Select here', search: true, searchText: 'Enter here.',
+                              captionFormatAllSelected:'{0} selected',captionFormat:'{0} selected' });
 
     $scope.sources = GlobalDietFactory.getSources();
     $scope.selectedSource = $scope.sources[0];
@@ -30,7 +31,10 @@ angular.module('globalDietApp')
     $scope.countries = [];
     $scope.selectedCountries = [];
 
-
+    function toTitleCase(str)
+    {
+        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    }
 
     function updateData() {
       GlobalDietFactory.list($scope.selectedSource.folder, $scope.selectedMeasure.file).then(function (data) {
@@ -41,7 +45,12 @@ angular.module('globalDietApp')
         $scope.init = true;       
         
         $scope.countries.forEach(function (item, i) {
-          $('#countries')[0].sumo.add(item.value,item.text);
+          var title = toTitleCase(item.text.replaceAll('-', ' ')); 
+          title = title.replace(' And ', ' and ').replace(' Of ',' of ');
+            title = title.length > 3 ? title : title.toUpperCase();            
+            title = title.toUpperCase() === 'USSR' ? 'USSR' : title;
+
+          $('#countries')[0].sumo.add(item.value,title.replaceAll('-', ' '));
           if (i < 6)
             $('#countries')[0].sumo.selectItem(item.value);
         });

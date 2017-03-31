@@ -203,6 +203,11 @@ Flowing.prototype.render = function () {
     // Init configurations and Controls
     this.init();
 
+    function toTitleCase(str)
+    {
+        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    }
+
     // Start chart for each item
     var svg_header = d3.select(this.configuration.container_header).selectAll("svg")
         .data(Object.keys(this.data.groups))
@@ -213,7 +218,13 @@ Flowing.prototype.render = function () {
         .append("text")
         .attr("dy", "1.1em")
         .attr("dx", "0.4em")
-        .text(function (d) { var title = d.charAt(0).toUpperCase() + d.slice(1); return title.replaceAll('-', ' '); })
+        .text(function (d) { 
+            var title = toTitleCase(d.replaceAll('-', ' ')); 
+            title = title.replace(' And ', ' and ').replace(' Of ',' of ');
+            title = title.length > 3 ? title : title.toUpperCase();
+            title = title.toUpperCase() === 'USSR' ? 'USSR' : title;
+            return title.replaceAll('-', ' '); 
+        })
         .attr("transform", "translate(" + that.configuration.items.margin.left + "," + that.configuration.items.margin.top + ")");
 
     var svg = d3.select(this.configuration.container).selectAll("svg")
